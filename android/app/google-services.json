@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "622340299498",
+    "project_id": "star-shop-29072003",
+    "storage_bucket": "star-shop-29072003.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:622340299498:android:248b92b92038cc70189593",
+        "android_client_info": {
+          "package_name": "com.example.star_shop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcxyF6MtgpPBFKA6yBOR71xU-Um1REs9o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
