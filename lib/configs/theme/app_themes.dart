@@ -11,14 +11,14 @@ class AppThemes {
         borderRadius: BorderRadius.circular(8),
         borderSide: BorderSide(
           color: Color(0xff74717D),
-          width: 1,
+          width: 2,
         ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
         borderSide: BorderSide(
           color: Color(0xff1E1E20),
-          width: 1,
+          width: 2,
         ),
       ),
       hintStyle: TextStyle(
