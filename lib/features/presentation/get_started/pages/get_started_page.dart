@@ -48,7 +48,7 @@ class GetStartedPage extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   child: AppButton(
                     onPressed: () {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignInPage()));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignInPage()));
                     },
                     title: 'Get Started',
                   ),

@@ -2,8 +2,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_shop/configs/theme/app_themes.dart';
+import 'package:star_shop/features/presentation/auth/pages/create_new_password_page.dart';
+import 'package:star_shop/features/presentation/auth/pages/forget_password_page.dart';
 import 'package:star_shop/features/presentation/auth/pages/sign_in_page.dart';
 import 'package:star_shop/features/presentation/get_started/pages/get_started_page.dart';
+import 'package:star_shop/features/presentation/home/pages/home_page.dart';
 import 'package:star_shop/features/presentation/splash/pages/splash_page.dart';
 import 'package:star_shop/firebase_options.dart';
 import 'package:star_shop/service_locator.dart';
@@ -28,7 +31,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         theme: AppThemes.appTheme,
         debugShowCheckedModeBanner: false,
-        home: GetStartedPage()
+        home: SignInPage()
     );
   }
 }

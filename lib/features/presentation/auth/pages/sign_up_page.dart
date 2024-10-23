@@ -130,7 +130,7 @@ class SignUpPage extends StatelessWidget {
     return Builder(builder: (context) {
       return ReactiveButton(
         onPressed: () {
-          context.read<ButtonCubit>().execute();
+          //context.read<ButtonCubit>().execute();
         },
         title: 'Register with Email',
       );
@@ -156,7 +156,7 @@ class SignUpPage extends StatelessWidget {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const SignInPage()));
+                    builder: (context) => SignInPage()));
           },
           child: const Text(
             'Login',

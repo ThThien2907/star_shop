@@ -3,12 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:star_shop/configs/assets/app_vectors.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
+import 'package:star_shop/features/data/auth/models/user_sign_in_req.dart';
+import 'package:star_shop/features/domain/auth/use_cases/sign_in_use_case.dart';
+import 'package:star_shop/features/domain/auth/use_cases/sign_up_use_case.dart';
+import 'package:star_shop/features/presentation/auth/bloc/password_cubit.dart';
+import 'package:star_shop/features/presentation/auth/bloc/password_state.dart';
 import 'package:star_shop/features/presentation/auth/pages/sign_up_page.dart';
+import 'package:star_shop/features/presentation/home/pages/home_page.dart';
 import 'package:star_shop/utils/bloc/button/button_cubit.dart';
+import 'package:star_shop/utils/bloc/button/button_state.dart';
 import 'package:star_shop/utils/widgets/button/reactive_button.dart';
 
 class SignInPage extends StatelessWidget {
-  const SignInPage({super.key});
+  SignInPage({super.key});
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -23,56 +33,73 @@ class SignInPage extends StatelessWidget {
         ),
         backgroundColor: AppColors.backgroundColor,
       ),
-      body: BlocProvider(
-        create: (context) => ButtonCubit(),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          height: double.infinity,
-          width: double.infinity,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 50,
-              ),
-              _emailField(),
-              const SizedBox(
-                height: 16,
-              ),
-              _passwordField(),
-              const SizedBox(
-                height: 16,
-              ),
-              _forgotPassword(context),
-              const SizedBox(
-                height: 48,
-              ),
-              _signInButton(context),
-              const SizedBox(
-                height: 48,
-              ),
-              _divider(),
-              const SizedBox(
-                height: 48,
-              ),
-              _signInWithGoogle(context),
-              const SizedBox(
-                height: 16,
-              ),
-              _signInWithApple(context),
-              const Spacer(),
-              _signUpText(context),
-              const SizedBox(
-                height: 50,
-              ),
-            ],
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => ButtonCubit()),
+          BlocProvider(create: (context) => PasswordCubit()),
+        ],
+        child: BlocListener<ButtonCubit, ButtonState>(
+          listener: (context, state) {
+            if (state is ButtonSuccessState) {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                      (Route<dynamic> route) => false);
+            }
+            if (state is ButtonFailureState) {
+              print('Loi' + state.error);
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            height: double.infinity,
+            width: double.infinity,
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 50,
+                ),
+                _emailField(context),
+                const SizedBox(
+                  height: 16,
+                ),
+                _passwordField(),
+                const SizedBox(
+                  height: 16,
+                ),
+                _forgotPassword(context),
+                const SizedBox(
+                  height: 48,
+                ),
+                _signInButton(context),
+                const SizedBox(
+                  height: 48,
+                ),
+                _divider(),
+                const SizedBox(
+                  height: 48,
+                ),
+                _signInWithGoogle(context),
+                const SizedBox(
+                  height: 16,
+                ),
+                _signInWithApple(context),
+                const Spacer(),
+                _signUpText(context),
+                const SizedBox(
+                  height: 50,
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _emailField() {
-    return const Column(
+  Widget _emailField(BuildContext context) {
+    String emailErrorText = '';
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -85,17 +112,43 @@ class SignInPage extends StatelessWidget {
         SizedBox(
           height: 8,
         ),
-        TextField(
-          decoration: InputDecoration(
-            hintText: 'Enter your email',
-          ),
+        BlocBuilder<ButtonCubit, ButtonState>(
+          builder: (context, state) {
+            if (state is ButtonFailureState) {
+              if (_emailController.text.isEmpty) {
+                emailErrorText = 'Email is required';
+              }
+              else if (state.error == 'invalid-email') {
+                emailErrorText = 'Invalid email';
+              }
+              else {
+                emailErrorText = '';
+              }
+              // return TextField(
+              //   controller: _emailController,
+              //   decoration: InputDecoration(
+              //     hintText: 'Enter your email',
+              //     errorText: emailErrorText.isEmpty ? null : emailErrorText,
+              //   ),
+              // );
+            }
+            return TextField(
+              controller: _emailController,
+              decoration: InputDecoration(
+                hintText: 'Enter your email',
+                errorText: emailErrorText.isEmpty ? null : emailErrorText,
+              ),
+            );
+          },
         ),
       ],
     );
   }
 
   Widget _passwordField() {
-    return const Column(
+    String passwordErrorText = '';
+    bool hidePassword = true;
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -108,10 +161,61 @@ class SignInPage extends StatelessWidget {
         SizedBox(
           height: 8,
         ),
-        TextField(
-          decoration: InputDecoration(
-            hintText: 'Enter your password',
-          ),
+        BlocBuilder<ButtonCubit, ButtonState>(
+          builder: (context, state) {
+            if (state is ButtonFailureState) {
+              if (_passwordController.text.isEmpty || state.error == 'missing-password') {
+                passwordErrorText = 'Password is required';
+              }
+              else if (state.error == 'invalid-credential') {
+                passwordErrorText = 'Wrong password provided for this user';
+              }
+              else {
+                passwordErrorText = '';
+              }
+              // return TextField(
+              //   controller: _emailController,
+              //   decoration: InputDecoration(
+              //     hintText: 'Enter your email',
+              //     errorText: emailError.isEmpty ? null : emailError,
+              //   ),
+              // );
+            }
+            // return TextField(
+            //   controller: _emailController,
+            //   decoration: InputDecoration(
+            //     hintText: 'Enter your email',
+            //   ),
+            // );
+            return BlocBuilder<PasswordCubit, PasswordState>(
+              builder: (context, state) {
+                if (state is PasswordHideState){
+                  hidePassword = true;
+                }
+                if (state is PasswordShowState){
+                  hidePassword = false;
+                }
+                return TextField(
+                  controller: _passwordController,
+                  obscureText: hidePassword ? true : false,
+                  decoration: InputDecoration(
+                    hintText: 'Enter your password',
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        if (hidePassword){
+                          context.read<PasswordCubit>().showPassword();
+                        }
+                        else {
+                          context.read<PasswordCubit>().hidePassword();
+                        }
+                      },
+                      icon: hidePassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+                    ),
+                    errorText: passwordErrorText.isEmpty ? null : passwordErrorText,
+                  ),
+                );
+              },);
+          },
         ),
       ],
     );
@@ -139,14 +243,33 @@ class SignInPage extends StatelessWidget {
     return Builder(builder: (context) {
       return ReactiveButton(
         onPressed: () {
-          context.read<ButtonCubit>().execute();
+          context.read<ButtonCubit>().execute(
+            useCase: SignInUseCase(),
+            params: UserSignInReq(
+              email: _emailController.text,
+              password: _passwordController.text,
+            ),
+          );
         },
         title: 'Login with Email',
       );
     });
   }
 
-  Widget _divider(){
+  Widget _signUpButton(BuildContext context) {
+    return Builder(builder: (context) {
+      return ReactiveButton(
+        onPressed: () {
+          context.read<ButtonCubit>().execute(
+            useCase: SignUpUseCase(),
+          );
+        },
+        title: 'Login with Email',
+      );
+    });
+  }
+
+  Widget _divider() {
     return const Row(
       children: [
         Expanded(
@@ -171,13 +294,15 @@ class SignInPage extends StatelessWidget {
     );
   }
 
-  Widget _signInWithGoogle(BuildContext context){
+  Widget _signInWithGoogle(BuildContext context) {
     return OutlinedButton(
       onPressed: () {},
       style: OutlinedButton.styleFrom(
-        minimumSize: Size(MediaQuery.of(context).size.width, 60),
-        side:
-        const BorderSide(color: AppColors.primaryColor, width: 2),
+        minimumSize: Size(MediaQuery
+            .of(context)
+            .size
+            .width, 60),
+        side: const BorderSide(color: AppColors.primaryColor, width: 2),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -202,13 +327,15 @@ class SignInPage extends StatelessWidget {
     );
   }
 
-  Widget _signInWithApple(BuildContext context){
+  Widget _signInWithApple(BuildContext context) {
     return OutlinedButton(
       onPressed: () {},
       style: OutlinedButton.styleFrom(
-        minimumSize: Size(MediaQuery.of(context).size.width, 60),
-        side:
-        const BorderSide(color: AppColors.primaryColor, width: 2),
+        minimumSize: Size(MediaQuery
+            .of(context)
+            .size
+            .width, 60),
+        side: const BorderSide(color: AppColors.primaryColor, width: 2),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -233,7 +360,7 @@ class SignInPage extends StatelessWidget {
     );
   }
 
-  Widget _signUpText(BuildContext context){
+  Widget _signUpText(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -249,10 +376,8 @@ class SignInPage extends StatelessWidget {
         ),
         InkWell(
           onTap: () {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const SignUpPage()));
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const SignUpPage()));
           },
           child: const Text(
             'Register',
