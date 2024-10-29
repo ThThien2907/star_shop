@@ -11,4 +11,13 @@ class PasswordCubit extends Cubit<PasswordState>{
   showPassword(){
     emit(PasswordShowState());
   }
+
+  changePasswordToggle(bool isHidePassword){
+    if(isHidePassword){
+      emit(PasswordShowState());
+    }
+    else {
+      emit(PasswordHideState());
+    }
+  }
 }

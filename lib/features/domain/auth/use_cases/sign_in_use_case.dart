@@ -8,7 +8,7 @@ import 'package:star_shop/utils/use_case/use_case.dart';
 class SignInUseCase extends UseCase<Either, UserSignInReq>{
   @override
   Future<Either> call({UserSignInReq? params}) async {
-    return sl<AuthRepository>().signIn(params!);
+    return await sl<AuthRepository>().signIn(params!);
   }
 
 }
