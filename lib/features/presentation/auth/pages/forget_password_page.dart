@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:star_shop/common/widgets/app_bar/basic_app_bar.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
-import 'package:star_shop/utils/bloc/button/button_cubit.dart';
-import 'package:star_shop/utils/widgets/button/reactive_button.dart';
+import 'package:star_shop/common/bloc/button/button_cubit.dart';
+import 'package:star_shop/common/widgets/button/reactive_button.dart';
 
 class ForgetPasswordPage extends StatelessWidget {
   const ForgetPasswordPage({super.key});
@@ -10,15 +11,14 @@ class ForgetPasswordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
+      appBar: const BasicAppBar(
+        title: Text(
           'Forgot Password',
           style: TextStyle(
             color: AppColors.textColor,
-            fontSize: 18,
+            fontSize: 16,
           ),
         ),
-        backgroundColor: AppColors.backgroundColor,
       ),
       body: BlocProvider(
         create: (context) => ButtonCubit(),
@@ -45,7 +45,7 @@ class ForgetPasswordPage extends StatelessWidget {
               ),
               _emailField(),
               SizedBox(
-                height: 48,
+                height: 34,
               ),
               _continueButton(context),
             ],

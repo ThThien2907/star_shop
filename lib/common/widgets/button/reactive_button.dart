@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:star_shop/common/bloc/button/button_cubit.dart';
+import 'package:star_shop/common/bloc/button/button_state.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
-import 'package:star_shop/utils/bloc/button/button_cubit.dart';
-import 'package:star_shop/utils/bloc/button/button_state.dart';
 
 class ReactiveButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -38,7 +38,7 @@ class ReactiveButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         minimumSize: Size(
           width ?? MediaQuery.of(context).size.width,
-          height ?? 60,
+          height ?? 50,
         ),
         backgroundColor: AppColors.primaryColor,
         shape: RoundedRectangleBorder(
@@ -51,7 +51,7 @@ class ReactiveButton extends StatelessWidget {
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w400,
-              fontSize: 18,
+              fontSize: 16,
             ),
           ),
     );
@@ -63,7 +63,7 @@ class ReactiveButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         minimumSize: Size(
           width ?? MediaQuery.of(context).size.width,
-          height ?? 60,
+          height ?? 50,
         ),
         backgroundColor: AppColors.primaryColor,
         shape: RoundedRectangleBorder(

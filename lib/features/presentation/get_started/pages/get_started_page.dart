@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/presentation/auth/pages/sign_in_page.dart';
-import 'package:star_shop/utils/widgets/button/app_button.dart';
+import 'package:star_shop/common/widgets/button/app_button.dart';
 
 class GetStartedPage extends StatelessWidget {
   const GetStartedPage({super.key});

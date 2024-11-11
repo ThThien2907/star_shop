@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:star_shop/common/widgets/app_bar/basic_app_bar.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
-import 'package:star_shop/utils/bloc/button/button_cubit.dart';
-import 'package:star_shop/utils/widgets/button/reactive_button.dart';
+import 'package:star_shop/common/bloc/button/button_cubit.dart';
+import 'package:star_shop/common/widgets/button/reactive_button.dart';
 
 class CreateNewPasswordPage extends StatelessWidget {
   const CreateNewPasswordPage({super.key});
@@ -10,15 +11,14 @@ class CreateNewPasswordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
+      appBar: const BasicAppBar(
+        title: Text(
           'Create New Password',
           style: TextStyle(
             color: AppColors.textColor,
-            fontSize: 18,
+            fontSize: 16,
           ),
         ),
-        backgroundColor: AppColors.backgroundColor,
       ),
       body: BlocProvider(
         create: (context) => ButtonCubit(),
@@ -56,7 +56,7 @@ class CreateNewPasswordPage extends StatelessWidget {
           'New Password',
           style: TextStyle(
             color: AppColors.textColor,
-            fontSize: 18,
+            fontSize: 16,
           ),
         ),
         SizedBox(
@@ -79,7 +79,7 @@ class CreateNewPasswordPage extends StatelessWidget {
           'Confirm Password',
           style: TextStyle(
             color: AppColors.textColor,
-            fontSize: 18,
+            fontSize: 16,
           ),
         ),
         SizedBox(

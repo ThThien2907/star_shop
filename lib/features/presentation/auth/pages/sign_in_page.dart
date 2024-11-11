@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:star_shop/common/widgets/app_bar/basic_app_bar.dart';
+import 'package:star_shop/common/widgets/bottom_nav/app_bottom_nav.dart';
 import 'package:star_shop/configs/assets/app_vectors.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/data/auth/models/user_sign_in_req.dart';
@@ -13,9 +15,9 @@ import 'package:star_shop/features/presentation/auth/pages/sign_up_page.dart';
 import 'package:star_shop/features/presentation/auth/widgets/email_text_field.dart';
 import 'package:star_shop/features/presentation/auth/widgets/password_text_field.dart';
 import 'package:star_shop/features/presentation/home/pages/home_page.dart';
-import 'package:star_shop/utils/bloc/button/button_cubit.dart';
-import 'package:star_shop/utils/bloc/button/button_state.dart';
-import 'package:star_shop/utils/widgets/button/reactive_button.dart';
+import 'package:star_shop/common/bloc/button/button_cubit.dart';
+import 'package:star_shop/common/bloc/button/button_state.dart';
+import 'package:star_shop/common/widgets/button/reactive_button.dart';
 
 class SignInPage extends StatelessWidget {
   SignInPage({super.key});
@@ -26,15 +28,14 @@ class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
+      appBar: const BasicAppBar(
+        title: Text(
           'Login to STARSHOP',
           style: TextStyle(
             color: AppColors.textColor,
-            fontSize: 18,
+            fontSize: 16,
           ),
         ),
-        backgroundColor: AppColors.backgroundColor,
       ),
       body: MultiBlocProvider(
         providers: [
@@ -43,10 +44,10 @@ class SignInPage extends StatelessWidget {
         child: BlocListener<ButtonCubit, ButtonState>(
           listener: (context, state) {
             if (state is ButtonSuccessState) {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                  (Route<dynamic> route) => false);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => AppBottomNav()),
+              );
             }
             if (state is ButtonFailureState) {
               print('Loi' + state.errorCode);
@@ -59,31 +60,29 @@ class SignInPage extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 50,
+                  height: 20,
                 ),
-                //_emailField(context),
                 EmailTextField(emailController: _emailController),
                 const SizedBox(
-                  height: 16,
+                  height: 12,
                 ),
-                //_passwordField(),
                 PasswordTextField(
                   passwordController: _passwordController,
                 ),
                 const SizedBox(
-                  height: 16,
+                  height: 12,
                 ),
                 _forgotPassword(context),
                 const SizedBox(
-                  height: 48,
+                  height: 34,
                 ),
                 _signInButton(context),
                 const SizedBox(
-                  height: 48,
+                  height: 16,
                 ),
                 _divider(),
                 const SizedBox(
-                  height: 48,
+                  height: 16,
                 ),
                 _signInWithGoogle(context),
                 const SizedBox(
@@ -93,7 +92,7 @@ class SignInPage extends StatelessWidget {
                 const Spacer(),
                 _signUpText(context),
                 const SizedBox(
-                  height: 50,
+                  height: 20,
                 ),
               ],
             ),
@@ -103,123 +102,22 @@ class SignInPage extends StatelessWidget {
     );
   }
 
-  Widget _emailField(BuildContext context) {
-    String emailErrorText = '';
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Email',
-          style: TextStyle(
-            color: AppColors.textColor,
-            fontSize: 18,
-          ),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        BlocBuilder<ButtonCubit, ButtonState>(
-          builder: (context, state) {
-            if (state is ButtonFailureState) {
-              if (_emailController.text.isEmpty) {
-                emailErrorText = 'Email is required';
-              } else if (state.errorCode == 'invalid-email') {
-                emailErrorText = 'Invalid email';
-              } else {
-                emailErrorText = '';
-              }
-            }
-            return TextField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                hintText: 'Enter your email',
-                errorText: emailErrorText.isEmpty ? null : emailErrorText,
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _passwordField() {
-    String passwordErrorText = '';
-    bool hidePassword = true;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Password',
-          style: TextStyle(
-            color: AppColors.textColor,
-            fontSize: 18,
-          ),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        BlocBuilder<ButtonCubit, ButtonState>(
-          builder: (context, state) {
-            if (state is ButtonFailureState) {
-              if (_passwordController.text.isEmpty ||
-                  state.errorCode == 'missing-password') {
-                passwordErrorText = 'Password is required';
-              } else if (state.errorCode == 'invalid-credential') {
-                passwordErrorText = 'Wrong password provided for this user';
-              } else {
-                passwordErrorText = '';
-              }
-            }
-            return BlocBuilder<PasswordCubit, PasswordState>(
-              builder: (context, state1) {
-                if (state1 is PasswordHideState) {
-                  hidePassword = true;
-                }
-                if (state1 is PasswordShowState) {
-                  hidePassword = false;
-                }
-                return TextField(
-                  controller: _passwordController,
-                  obscureText: hidePassword ? true : false,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your password',
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        if (hidePassword) {
-                          context.read<PasswordCubit>().showPassword();
-                        } else {
-                          context.read<PasswordCubit>().hidePassword();
-                        }
-                      },
-                      icon: hidePassword
-                          ? Icon(Icons.visibility)
-                          : Icon(Icons.visibility_off),
-                    ),
-                    errorText:
-                        passwordErrorText.isEmpty ? null : passwordErrorText,
-                  ),
-                );
-              },
-            );
-          },
-        ),
-      ],
-    );
-  }
-
   Widget _forgotPassword(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         InkWell(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ForgetPasswordPage()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ForgetPasswordPage()));
           },
           child: const Text(
             'Forgot Password',
             style: TextStyle(
               color: AppColors.textColor,
-              fontSize: 18,
+              fontSize: 16,
             ),
           ),
         ),
@@ -286,7 +184,7 @@ class SignInPage extends StatelessWidget {
     return OutlinedButton(
       onPressed: () {},
       style: OutlinedButton.styleFrom(
-        minimumSize: Size(MediaQuery.of(context).size.width, 60),
+        minimumSize: Size(MediaQuery.of(context).size.width, 50),
         side: const BorderSide(color: AppColors.primaryColor, width: 2),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
@@ -304,7 +202,7 @@ class SignInPage extends StatelessWidget {
             'Login with Google',
             style: TextStyle(
               color: AppColors.textColor,
-              fontSize: 18,
+              fontSize: 16,
             ),
           ),
         ],
@@ -316,7 +214,7 @@ class SignInPage extends StatelessWidget {
     return OutlinedButton(
       onPressed: () {},
       style: OutlinedButton.styleFrom(
-        minimumSize: Size(MediaQuery.of(context).size.width, 60),
+        minimumSize: Size(MediaQuery.of(context).size.width, 50),
         side: const BorderSide(color: AppColors.primaryColor, width: 2),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
@@ -334,7 +232,7 @@ class SignInPage extends StatelessWidget {
             'Login with Apple',
             style: TextStyle(
               color: AppColors.textColor,
-              fontSize: 18,
+              fontSize: 16,
             ),
           ),
         ],
@@ -350,7 +248,7 @@ class SignInPage extends StatelessWidget {
           'Don’t have any account yet?',
           style: TextStyle(
             color: AppColors.grey,
-            fontSize: 18,
+            fontSize: 16,
           ),
         ),
         const SizedBox(
@@ -365,7 +263,7 @@ class SignInPage extends StatelessWidget {
             'Register',
             style: TextStyle(
               color: AppColors.primaryColor,
-              fontSize: 18,
+              fontSize: 16,
             ),
           ),
         )

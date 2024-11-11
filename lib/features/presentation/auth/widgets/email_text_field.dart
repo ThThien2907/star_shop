@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
-import 'package:star_shop/utils/bloc/button/button_cubit.dart';
-import 'package:star_shop/utils/bloc/button/button_state.dart';
+import 'package:star_shop/common/bloc/button/button_cubit.dart';
+import 'package:star_shop/common/bloc/button/button_state.dart';
 
 class EmailTextField extends StatefulWidget {
   const EmailTextField({super.key, required this.emailController});
@@ -25,11 +25,11 @@ class _EmailTextFieldState extends State<EmailTextField> {
           'Email',
           style: TextStyle(
             color: AppColors.textColor,
-            fontSize: 18,
+            fontSize: 16,
           ),
         ),
         const SizedBox(
-          height: 8,
+          height: 6,
         ),
         BlocBuilder<ButtonCubit, ButtonState>(
           builder: (context, state) {

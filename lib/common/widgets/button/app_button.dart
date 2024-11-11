@@ -22,13 +22,14 @@ class AppButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.all(0),
         minimumSize: Size(
           width ?? MediaQuery.of(context).size.width,
-          height ?? 60,
+          height ?? 50,
         ),
         backgroundColor: AppColors.primaryColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
       child: widget ??
@@ -37,7 +38,7 @@ class AppButton extends StatelessWidget {
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w400,
-              fontSize: 18,
+              fontSize: 16,
             ),
           ),
     );

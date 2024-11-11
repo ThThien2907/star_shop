@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/presentation/auth/bloc/password_cubit.dart';
 import 'package:star_shop/features/presentation/auth/bloc/password_state.dart';
-import 'package:star_shop/utils/bloc/button/button_cubit.dart';
-import 'package:star_shop/utils/bloc/button/button_state.dart';
+import 'package:star_shop/common/bloc/button/button_cubit.dart';
+import 'package:star_shop/common/bloc/button/button_state.dart';
 
 class ConfirmPasswordTextField extends StatefulWidget {
   const ConfirmPasswordTextField({
@@ -38,7 +38,7 @@ class _ConfirmPasswordTextFieldState extends State<ConfirmPasswordTextField> {
             ),
           ),
           const SizedBox(
-            height: 8,
+            height: 6,
           ),
           BlocBuilder<ButtonCubit, ButtonState>(
             builder: (context, state) {

@@ -1,6 +1,6 @@
-import 'package:star_shop/utils/bloc/button/button_state.dart';
+import 'package:star_shop/common/bloc/button/button_state.dart';
+import 'package:star_shop/common/use_case/use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:star_shop/utils/use_case/use_case.dart';
 
 class ButtonCubit extends Cubit<ButtonState> {
   ButtonCubit() : super(ButtonInitialState());

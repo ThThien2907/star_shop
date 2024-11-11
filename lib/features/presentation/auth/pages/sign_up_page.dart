@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:star_shop/common/widgets/app_bar/basic_app_bar.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/data/auth/models/user_sign_up_req.dart';
 import 'package:star_shop/features/domain/auth/use_cases/sign_up_use_case.dart';
@@ -9,9 +10,9 @@ import 'package:star_shop/features/presentation/auth/widgets/confirm_password_te
 import 'package:star_shop/features/presentation/auth/widgets/email_text_field.dart';
 import 'package:star_shop/features/presentation/auth/widgets/password_text_field.dart';
 import 'package:star_shop/features/presentation/home/pages/home_page.dart';
-import 'package:star_shop/utils/bloc/button/button_cubit.dart';
-import 'package:star_shop/utils/bloc/button/button_state.dart';
-import 'package:star_shop/utils/widgets/button/reactive_button.dart';
+import 'package:star_shop/common/bloc/button/button_cubit.dart';
+import 'package:star_shop/common/bloc/button/button_state.dart';
+import 'package:star_shop/common/widgets/button/reactive_button.dart';
 
 class SignUpPage extends StatelessWidget {
   SignUpPage({super.key});
@@ -23,15 +24,14 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
+      appBar: const BasicAppBar(
+        title: Text(
           'Register to STARSHOP',
           style: TextStyle(
             color: AppColors.textColor,
-            fontSize: 18,
+            fontSize: 16,
           ),
         ),
-        backgroundColor: AppColors.backgroundColor,
       ),
       body: MultiBlocProvider(
         providers: [
@@ -59,7 +59,7 @@ class SignUpPage extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 50,
+                  height: 20,
                 ),
                 //_emailField(),
                 EmailTextField(emailController: _emailController),
@@ -78,13 +78,13 @@ class SignUpPage extends StatelessWidget {
                   passwordController: _confirmPasswordController,
                 ),
                 const SizedBox(
-                  height: 48,
+                  height: 34,
                 ),
                 _signUpButton(context),
                 const Spacer(),
                 _signInText(context),
                 const SizedBox(
-                  height: 50,
+                  height: 20,
                 ),
               ],
             ),
@@ -120,7 +120,7 @@ class SignUpPage extends StatelessWidget {
           'Already have an account?',
           style: TextStyle(
             color: AppColors.grey,
-            fontSize: 18,
+            fontSize: 16,
           ),
         ),
         const SizedBox(
@@ -135,7 +135,7 @@ class SignUpPage extends StatelessWidget {
             'Login',
             style: TextStyle(
               color: AppColors.primaryColor,
-              fontSize: 18,
+              fontSize: 16,
             ),
           ),
         )
