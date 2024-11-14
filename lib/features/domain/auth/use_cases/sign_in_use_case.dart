@@ -10,5 +10,4 @@ class SignInUseCase extends UseCase<Either, UserSignInReq>{
   Future<Either> call({UserSignInReq? params}) async {
     return await sl<AuthRepository>().signIn(params!);
   }
-
 }

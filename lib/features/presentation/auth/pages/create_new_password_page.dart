@@ -12,13 +12,7 @@ class CreateNewPasswordPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const BasicAppBar(
-        title: Text(
-          'Create New Password',
-          style: TextStyle(
-            color: AppColors.textColor,
-            fontSize: 16,
-          ),
-        ),
+        title: 'Create New Password',
       ),
       body: BlocProvider(
         create: (context) => ButtonCubit(),

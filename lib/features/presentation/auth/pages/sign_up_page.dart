@@ -4,8 +4,8 @@ import 'package:star_shop/common/widgets/app_bar/basic_app_bar.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/data/auth/models/user_sign_up_req.dart';
 import 'package:star_shop/features/domain/auth/use_cases/sign_up_use_case.dart';
-import 'package:star_shop/features/presentation/auth/bloc/password_cubit.dart';
 import 'package:star_shop/features/presentation/auth/pages/sign_in_page.dart';
+import 'package:star_shop/features/presentation/auth/pages/update_profile_page.dart';
 import 'package:star_shop/features/presentation/auth/widgets/confirm_password_text_field.dart';
 import 'package:star_shop/features/presentation/auth/widgets/email_text_field.dart';
 import 'package:star_shop/features/presentation/auth/widgets/password_text_field.dart';
@@ -24,14 +24,9 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: const BasicAppBar(
-        title: Text(
-          'Register to STARSHOP',
-          style: TextStyle(
-            color: AppColors.textColor,
-            fontSize: 16,
-          ),
-        ),
+        title: 'Register to STARSHOP'
       ),
       body: MultiBlocProvider(
         providers: [
@@ -42,14 +37,13 @@ class SignUpPage extends StatelessWidget {
             if (state is ButtonSuccessState) {
               Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
+                  MaterialPageRoute(builder: (context) => const UpdateProfilePage()),
                   (Route<dynamic> route) => false);
             }
             if (state is ButtonFailureState) {
               if (state.errorCode == 'too-many-requests'){
                 //show snackbar
               }
-              print('Loi: ' + state.errorCode);
             }
           },
           child: Container(

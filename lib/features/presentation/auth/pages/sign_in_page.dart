@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,15 +7,13 @@ import 'package:star_shop/common/widgets/bottom_nav/app_bottom_nav.dart';
 import 'package:star_shop/configs/assets/app_vectors.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/data/auth/models/user_sign_in_req.dart';
+import 'package:star_shop/features/domain/auth/entities/user_entity.dart';
+import 'package:star_shop/features/domain/auth/use_cases/get_user_use_case.dart';
 import 'package:star_shop/features/domain/auth/use_cases/sign_in_use_case.dart';
-import 'package:star_shop/features/domain/auth/use_cases/sign_up_use_case.dart';
-import 'package:star_shop/features/presentation/auth/bloc/password_cubit.dart';
-import 'package:star_shop/features/presentation/auth/bloc/password_state.dart';
 import 'package:star_shop/features/presentation/auth/pages/forget_password_page.dart';
 import 'package:star_shop/features/presentation/auth/pages/sign_up_page.dart';
 import 'package:star_shop/features/presentation/auth/widgets/email_text_field.dart';
 import 'package:star_shop/features/presentation/auth/widgets/password_text_field.dart';
-import 'package:star_shop/features/presentation/home/pages/home_page.dart';
 import 'package:star_shop/common/bloc/button/button_cubit.dart';
 import 'package:star_shop/common/bloc/button/button_state.dart';
 import 'package:star_shop/common/widgets/button/reactive_button.dart';
@@ -28,21 +27,16 @@ class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: const BasicAppBar(
-        title: Text(
-          'Login to STARSHOP',
-          style: TextStyle(
-            color: AppColors.textColor,
-            fontSize: 16,
-          ),
-        ),
+        title: 'Login to STARSHOP'
       ),
       body: MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => ButtonCubit()),
         ],
         child: BlocListener<ButtonCubit, ButtonState>(
-          listener: (context, state) {
+          listener: (context, state)  {
             if (state is ButtonSuccessState) {
               Navigator.pushReplacement(
                 context,
@@ -135,19 +129,6 @@ class SignInPage extends StatelessWidget {
                   email: _emailController.text,
                   password: _passwordController.text,
                 ),
-              );
-        },
-        title: 'Login with Email',
-      );
-    });
-  }
-
-  Widget _signUpButton(BuildContext context) {
-    return Builder(builder: (context) {
-      return ReactiveButton(
-        onPressed: () {
-          context.read<ButtonCubit>().execute(
-                useCase: SignUpUseCase(),
               );
         },
         title: 'Login with Email',

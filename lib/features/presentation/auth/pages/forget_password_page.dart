@@ -12,13 +12,7 @@ class ForgetPasswordPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const BasicAppBar(
-        title: Text(
-          'Forgot Password',
-          style: TextStyle(
-            color: AppColors.textColor,
-            fontSize: 16,
-          ),
-        ),
+        title: 'Forgot Password'
       ),
       body: BlocProvider(
         create: (context) => ButtonCubit(),
