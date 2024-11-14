@@ -22,7 +22,7 @@ class AppButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.all(0),
+        padding: const EdgeInsets.all(0),
         minimumSize: Size(
           width ?? MediaQuery.of(context).size.width,
           height ?? 50,
