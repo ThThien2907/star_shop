@@ -12,18 +12,18 @@ class AppThemes {
         borderRadius: BorderRadius.circular(8),
         borderSide: const BorderSide(
           color: Color(0xff74717D),
-          width: 2,
+          width: 3,
         ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
         borderSide: const BorderSide(
           color: Color(0xff1E1E20),
-          width: 2,
+          width: 3,
         ),
       ),
       hintStyle: const TextStyle(
-        color: Color(0xffA7A5AF),
+        color: AppColors.grey,
       ),
       contentPadding: const EdgeInsets.all(16),
     ),
@@ -40,12 +40,9 @@ class AppThemes {
       backgroundColor: AppColors.backgroundColor,
       elevation: 0,
     ),
-    iconTheme: IconThemeData(
-      color: Color(0xff1E1E20),
-    ),
-    iconButtonTheme: IconButtonThemeData(
-      style: ButtonStyle(
-      )
+
+    snackBarTheme: const SnackBarThemeData(
+      backgroundColor: AppColors.black100,
     ),
   );
 }
