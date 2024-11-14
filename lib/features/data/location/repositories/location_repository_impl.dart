@@ -28,7 +28,7 @@ class LocationRepositoryImpl implements LocationRepository {
 
   ProvinceEntity provinceToEntity(ProvinceModel model) {
     return ProvinceEntity(
-      name_with_type: model.name_with_type,
+      name_with_type: model.nameWithType,
       code: model.code,
       isDeleted: model.isDeleted,
     );
@@ -51,9 +51,9 @@ class LocationRepositoryImpl implements LocationRepository {
 
   DistrictEntity districtToEntity(DistrictModel model) {
     return DistrictEntity(
-      name_with_type: model.name_with_type,
+      name_with_type: model.nameWithType,
       code: model.code,
-      parent_code: model.parent_code,
+      parent_code: model.parentCode,
       isDeleted: model.isDeleted,
     );
   }
@@ -75,9 +75,9 @@ class LocationRepositoryImpl implements LocationRepository {
 
   WardEntity wardToEntity(WardModel model) {
     return WardEntity(
-      name_with_type: model.name_with_type,
+      name_with_type: model.nameWithType,
       code: model.code,
-      parent_code: model.parent_code,
+      parent_code: model.parentCode,
       isDeleted: model.isDeleted,
     );
   }
