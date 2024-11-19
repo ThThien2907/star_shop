@@ -71,6 +71,8 @@ class ReactiveButton extends StatelessWidget {
         ),
       ),
       child: Container(
+        width: 30,
+        height: 30,
         alignment: Alignment.center,
         child: const CircularProgressIndicator(
           color: AppColors.primaryColor,
