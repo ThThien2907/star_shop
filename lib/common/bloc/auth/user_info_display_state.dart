@@ -16,8 +16,6 @@ class UserInfoDisplayLoadFailure extends UserInfoDisplayState{
   UserInfoDisplayLoadFailure({required this.errorCode});
 }
 
-class UserInfoUnAuthenticate extends UserInfoDisplayState{
-  final UserEntity userEntity;
+class EmailNotVerified extends UserInfoDisplayState{}
 
-  UserInfoUnAuthenticate({required this.userEntity});
-}
+class UserInfoEmpty extends UserInfoDisplayState{}

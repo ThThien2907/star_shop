@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_shop/common/widgets/app_bar/basic_app_bar.dart';
+import 'package:star_shop/common/widgets/snack_bar/app_snack_bar.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/data/auth/models/user_sign_up_req.dart';
 import 'package:star_shop/features/domain/auth/use_cases/sign_up_use_case.dart';
 import 'package:star_shop/features/presentation/auth/pages/sign_in_page.dart';
-import 'package:star_shop/features/presentation/auth/pages/update_profile_page.dart';
+import 'package:star_shop/features/presentation/auth/pages/verify_email_page.dart';
 import 'package:star_shop/features/presentation/auth/widgets/confirm_password_text_field.dart';
 import 'package:star_shop/features/presentation/auth/widgets/email_text_field.dart';
 import 'package:star_shop/features/presentation/auth/widgets/password_text_field.dart';
-import 'package:star_shop/features/presentation/home/pages/home_page.dart';
 import 'package:star_shop/common/bloc/button/button_cubit.dart';
 import 'package:star_shop/common/bloc/button/button_state.dart';
 import 'package:star_shop/common/widgets/button/reactive_button.dart';
@@ -25,9 +25,7 @@ class SignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: const BasicAppBar(
-        title: 'Register to STARSHOP'
-      ),
+      appBar: const BasicAppBar(title: 'Register to STARSHOP'),
       body: MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => ButtonCubit()),
@@ -37,12 +35,24 @@ class SignUpPage extends StatelessWidget {
             if (state is ButtonSuccessState) {
               Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const UpdateProfilePage()),
+                  MaterialPageRoute(
+                      builder: (context) => const VerifyEmailPage()),
                   (Route<dynamic> route) => false);
             }
             if (state is ButtonFailureState) {
-              if (state.errorCode == 'too-many-requests'){
-                //show snackbar
+              if (state.errorCode == 'too-many-requests') {
+                AppSnackBar.showAppSnackBar(
+                  context: context,
+                  title:
+                  'Too many requests, please try again later.',
+                );
+              }
+              else if (state.errorCode == 'network-request-failed') {
+                AppSnackBar.showAppSnackBar(
+                  context: context,
+                  title:
+                      'Lost network connection, please check your network connection again',
+                );
               }
             }
           },
@@ -92,14 +102,14 @@ class SignUpPage extends StatelessWidget {
     return Builder(builder: (context) {
       return ReactiveButton(
         onPressed: () {
-            context.read<ButtonCubit>().execute(
-              useCase: SignUpUseCase(),
-              params: UserSignUpReq(
-                  email: _emailController.text,
-                  password: _passwordController.text,
-                  confirmPassword: _confirmPasswordController.text,
-              ),
-            );
+          context.read<ButtonCubit>().execute(
+                useCase: SignUpUseCase(),
+                params: UserSignUpReq(
+                  email: _emailController.text.trim(),
+                  password: _passwordController.text.trim(),
+                  confirmPassword: _confirmPasswordController.text.trim(),
+                ),
+              );
         },
         title: 'Register with Email',
       );

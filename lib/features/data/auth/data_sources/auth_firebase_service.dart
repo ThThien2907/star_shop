@@ -26,27 +26,27 @@ class AuthFirebaseService {
           email: user.email,
           password: user.password,
         );
-        UserModel userModel = UserModel(
-          userId: response.user!.uid,
-          fullName: '',
-          email: user.email,
-          dob: '',
-          phoneNumber: '',
-          address: '',
-          city: '',
-          district: '',
-          ward: '',
-          gender: '',
-          role: 'UR',
-        );
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(response.user!.uid)
-            .set(userModel.toMap());
+        // UserModel userModel = UserModel(
+        //   userId: response.user!.uid,
+        //   fullName: '',
+        //   email: user.email,
+        //   dob: '',
+        //   phoneNumber: '',
+        //   address: '',
+        //   city: '',
+        //   district: '',
+        //   ward: '',
+        //   gender: '',
+        //   role: 'UR',
+        // );
+        // await FirebaseFirestore.instance
+        //     .collection('users')
+        //     .doc(response.user!.uid)
+        //     .set(userModel.toMap());
         return const Right('successful');
       }
       return const Left('password-not-match');
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseException catch (e) {
       return Left(e.code);
     }
   }
@@ -60,11 +60,24 @@ class AuthFirebaseService {
 
   Future<Either> updateProfile(UserModel user) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .update(user.toMap());
-      return Right('Update Success');
+      var response = await FirebaseFirestore.instance.collection('users').doc(user.userId).get();
+      if (response.data() == null){
+        print('set');
+        await FirebaseFirestore.instance
+            .collection('users')
+        // .doc(FirebaseAuth.instance.currentUser!.uid)
+            .doc(user.userId)
+            .set(user.toMap());
+      }
+      else {
+        print('update');
+        await FirebaseFirestore.instance
+            .collection('users')
+        // .doc(FirebaseAuth.instance.currentUser!.uid)
+            .doc(user.userId)
+            .update(user.toMap());
+      }
+      return const Right('Update Success');
     } on FirebaseException catch (e) {
       return Left(e.code);
     }
@@ -78,21 +91,27 @@ class AuthFirebaseService {
         UserModel userModel = UserModel.fromMap(response.data()!);
         return Right(userModel);
       } else {
-        UserModel userModel = UserModel(
-            userId: '',
-            fullName: '',
-            email: '',
-            dob: '',
-            phoneNumber: '',
-            address: '',
-            city: '',
-            district: '',
-            ward: '',
-            gender: '',
-            role: '');
-        return Right(userModel);
+        return const Right(null);
       }
     } on FirebaseException catch (e) {
+      return Left(e.code);
+    }
+  }
+
+  Future<Either> sendEmailVerifyEmail() async {
+    try {
+      await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+      return const Right('Email was sent');
+    } on FirebaseAuthException catch (e) {
+      return Left(e.code);
+    }
+  }
+
+  Future<Either> sendPasswordResetEmail(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      return const Right('Email was sent');
+    } on FirebaseAuthException catch (e) {
       return Left(e.code);
     }
   }

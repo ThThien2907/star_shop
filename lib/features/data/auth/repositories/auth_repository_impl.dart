@@ -43,6 +43,9 @@ class AuthRepositoryImpl implements AuthRepository {
     return response.fold((error){
       return Left(error);
     }, (data){
+      if (data == null){
+        return Right(null);
+      }
       UserEntity userEntity = userToEntity(data);
       return Right(userEntity);
     },);
@@ -80,5 +83,15 @@ class AuthRepositoryImpl implements AuthRepository {
       gender: user.gender!,
       role: user.role!,
     );
+  }
+
+  @override
+  Future<Either> sendEmailVerifyEmail() async{
+    return await sl<AuthFirebaseService>().sendEmailVerifyEmail();
+  }
+
+  @override
+  Future<Either> sendPasswordResetEmail(String email) async{
+    return await sl<AuthFirebaseService>().sendPasswordResetEmail(email);
   }
 }

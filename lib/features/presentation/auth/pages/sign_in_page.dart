@@ -1,14 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:star_shop/common/widgets/app_bar/basic_app_bar.dart';
 import 'package:star_shop/common/widgets/bottom_nav/app_bottom_nav.dart';
+import 'package:star_shop/common/widgets/snack_bar/app_snack_bar.dart';
 import 'package:star_shop/configs/assets/app_vectors.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/data/auth/models/user_sign_in_req.dart';
-import 'package:star_shop/features/domain/auth/entities/user_entity.dart';
-import 'package:star_shop/features/domain/auth/use_cases/get_user_use_case.dart';
 import 'package:star_shop/features/domain/auth/use_cases/sign_in_use_case.dart';
 import 'package:star_shop/features/presentation/auth/pages/forget_password_page.dart';
 import 'package:star_shop/features/presentation/auth/pages/sign_up_page.dart';
@@ -40,11 +38,24 @@ class SignInPage extends StatelessWidget {
             if (state is ButtonSuccessState) {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => AppBottomNav()),
+                MaterialPageRoute(builder: (context) => const AppBottomNav()),
               );
             }
             if (state is ButtonFailureState) {
-              print('Loi' + state.errorCode);
+              if (state.errorCode == 'too-many-requests') {
+                AppSnackBar.showAppSnackBar(
+                  context: context,
+                  title:
+                  'Too many requests, please try again later.',
+                );
+              }
+              else if (state.errorCode == 'network-request-failed') {
+                AppSnackBar.showAppSnackBar(
+                  context: context,
+                  title:
+                  'Lost network connection, please check your network connection again',
+                );
+              }
             }
           },
           child: Container(
@@ -112,6 +123,8 @@ class SignInPage extends StatelessWidget {
             style: TextStyle(
               color: AppColors.textColor,
               fontSize: 16,
+              decoration: TextDecoration.underline,
+              decorationColor: AppColors.textColor,
             ),
           ),
         ),
@@ -126,8 +139,8 @@ class SignInPage extends StatelessWidget {
           context.read<ButtonCubit>().execute(
                 useCase: SignInUseCase(),
                 params: UserSignInReq(
-                  email: _emailController.text,
-                  password: _passwordController.text,
+                  email: _emailController.text.trim(),
+                  password: _passwordController.text.trim(),
                 ),
               );
         },
