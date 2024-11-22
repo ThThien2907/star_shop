@@ -17,7 +17,7 @@ class ProfilePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text('Profile page'),
-          Text(FirebaseAuth.instance.currentUser!.uid ?? ''),
+          // Text(FirebaseAuth.instance.currentUser!.uid ?? ''),
           ElevatedButton(
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
@@ -35,15 +35,15 @@ class ProfilePage extends StatelessWidget {
           ElevatedButton(
               onPressed: () async {
                 var user = UserEntity(
-                  userId: FirebaseAuth.instance.currentUser!.uid,
-                  fullName: 'Thanh Thien',
-                  email: 'thien1234@gmail.com',
+                  userId: 'hehe',
+                  fullName: 'Than 123h Thien',
+                  email: 'thien@gmail.com',
                   dob: '29/7/2003',
                   phoneNumber: '0768628508',
-                  address: '11 Bau bang',
+                  address: '11  bang',
                   city: 'HCM',
-                  district: 'Tan Binh',
-                  ward: 'Phuong 13',
+                  district: 'Tan ',
+                  ward: ' 14',
                   gender: 'Male',
                   role: 'UR',
                 );
