@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_shop/common/bloc/auth/user_info_display_cubit.dart';
 import 'package:star_shop/common/bloc/auth/user_info_display_state.dart';
+import 'package:star_shop/common/widgets/error/app_error_widget.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
+import 'package:star_shop/features/domain/auth/entities/user_entity.dart';
 import 'package:star_shop/features/presentation/auth/pages/update_profile_page.dart';
 import 'package:star_shop/features/presentation/auth/pages/verify_email_page.dart';
 import 'package:star_shop/features/presentation/cart/pages/cart_page.dart';
@@ -11,7 +13,9 @@ import 'package:star_shop/features/presentation/home/pages/home_page.dart';
 import 'package:star_shop/features/presentation/profile/pages/profile_page.dart';
 
 class AppBottomNav extends StatefulWidget {
-  const AppBottomNav({super.key,});
+  const AppBottomNav({
+    super.key,
+  });
 
   @override
   State<AppBottomNav> createState() => _AppBottomNavState();
@@ -29,12 +33,12 @@ class _AppBottomNavState extends State<AppBottomNav> {
         icon: Icon(Icons.person_outline), label: 'Account'),
   ];
 
-  List<Widget> listPage = [
-    const HomePage(),
-    const FavoritePage(),
-    const CartPage(),
-    const ProfilePage()
-  ];
+  // List<Widget> listPage = [
+  //   const HomePage(),
+  //   const FavoritePage(),
+  //   const CartPage(),
+  //   const ProfilePage()
+  // ];
 
   int activePage = 0;
 
@@ -49,7 +53,7 @@ class _AppBottomNavState extends State<AppBottomNav> {
       create: (context) => UserInfoDisplayCubit()..getUser(),
       child: BlocBuilder<UserInfoDisplayCubit, UserInfoDisplayState>(
         builder: (context, state) {
-          if (state is UserInfoDisplayLoading) {
+          if (state is UserInfoLoading) {
             return const Scaffold(
               body: Center(
                 child: CircularProgressIndicator(
@@ -58,51 +62,34 @@ class _AppBottomNavState extends State<AppBottomNav> {
               ),
             );
           }
-          if (state is UserInfoDisplayLoadFailure) {
+          if (state is UserInfoLoadFailure) {
             return Scaffold(
               body: Center(
-                child: Column(
-                  children: [
-                    Text(
-                      state.errorCode,
-                      style: const TextStyle(
-                        color: AppColors.textColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        context.read<UserInfoDisplayCubit>().getUser();
-                      },
-                      child: const Text(
-                        'Please try connect again',
-                        style: TextStyle(
-                          color: AppColors.textColor,
-                          fontSize: 16,
-                          decoration: TextDecoration.underline,
-                        ),
-
-                      ),
-                    ),
-                  ],
+                child: AppErrorWidget(
+                  onPress: () {
+                    context.read<UserInfoDisplayCubit>().getUser();
+                  },
                 ),
               ),
             );
           }
 
-          if (state is UserInfoEmpty){
+          if (state is UserInfoIsEmpty) {
             return const UpdateProfilePage();
           }
 
-          if (state is EmailNotVerified){
+          if (state is EmailNotVerified) {
             return const VerifyEmailPage();
           }
 
-          if (state is UserInfoDisplayLoaded) {
+          if (state is UserInfoLoaded) {
+            UserEntity userEntity = state.userEntity;
+            List<Widget> listPage = [
+              HomePage(userEntity: userEntity),
+              const FavoritePage(),
+              const CartPage(),
+              const ProfilePage()
+            ];
             return Scaffold(
               extendBody: true,
               body: IndexedStack(
