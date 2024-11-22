@@ -82,18 +82,18 @@ class SignInPage extends StatelessWidget {
                   height: 34,
                 ),
                 _signInButton(context),
-                const SizedBox(
-                  height: 16,
-                ),
-                _divider(),
-                const SizedBox(
-                  height: 16,
-                ),
-                _signInWithGoogle(context),
-                const SizedBox(
-                  height: 16,
-                ),
-                _signInWithApple(context),
+                // const SizedBox(
+                //   height: 16,
+                // ),
+                // _divider(),
+                // const SizedBox(
+                //   height: 16,
+                // ),
+                // _signInWithGoogle(context),
+                // const SizedBox(
+                //   height: 16,
+                // ),
+                // _signInWithApple(context),
                 const Spacer(),
                 _signUpText(context),
                 const SizedBox(

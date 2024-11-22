@@ -49,6 +49,7 @@ class _EmailTextFieldState extends State<EmailTextField> {
             }
             return TextField(
               controller: widget.emailController,
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 hintText: 'Enter your email',
                 errorText: emailErrorText.isEmpty ? null : emailErrorText,

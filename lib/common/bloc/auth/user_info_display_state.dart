@@ -2,20 +2,26 @@ import 'package:star_shop/features/domain/auth/entities/user_entity.dart';
 
 class UserInfoDisplayState {}
 
-class UserInfoDisplayLoading extends UserInfoDisplayState{}
+class UserInfoLoading extends UserInfoDisplayState{}
 
-class UserInfoDisplayLoaded extends UserInfoDisplayState{
+class UserInfoLoaded extends UserInfoDisplayState{
   final UserEntity userEntity;
 
-  UserInfoDisplayLoaded({required this.userEntity});
+  UserInfoLoaded({required this.userEntity});
 }
 
-class UserInfoDisplayLoadFailure extends UserInfoDisplayState{
+class IsAdmin extends UserInfoDisplayState{
+  final UserEntity userEntity;
+
+  IsAdmin({required this.userEntity});
+}
+
+class UserInfoLoadFailure extends UserInfoDisplayState{
   final String errorCode;
 
-  UserInfoDisplayLoadFailure({required this.errorCode});
+  UserInfoLoadFailure({required this.errorCode});
 }
 
 class EmailNotVerified extends UserInfoDisplayState{}
 
-class UserInfoEmpty extends UserInfoDisplayState{}
+class UserInfoIsEmpty extends UserInfoDisplayState{}
