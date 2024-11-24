@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:star_shop/common/bloc/favorite/favorite_product_state.dart';
 import 'package:star_shop/common/widgets/network_image/app_network_image.dart';
 import 'package:star_shop/configs/assets/app_vectors.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/domain/product/entities/product_entity.dart';
+import 'package:star_shop/common/bloc/favorite/favorite_product_cubit.dart';
+import 'package:star_shop/features/presentation/product/pages/product_detail_page.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({super.key, required this.productEntity});
@@ -13,7 +17,13 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    ProductDetailPage(productEntity: productEntity)));
+      },
       child: Stack(
         children: [
           Column(
@@ -30,9 +40,11 @@ class ProductCard extends StatelessWidget {
               Expanded(
                 flex: 1,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 8,
+                  padding: const EdgeInsets.only(
+                    top: 15,
+                    left: 8,
+                    right: 8,
+                    bottom: 8,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,10 +64,27 @@ class ProductCard extends StatelessWidget {
               )
             ],
           ),
-          Positioned(
-            top: 10,
-            right: 10,
-            child: _favoriteButton(context),
+          BlocBuilder<FavoriteProductCubit, FavoriteProductState>(
+            builder: (context, state) {
+              bool isFavorite = false;
+
+              if(state is FavoriteProductLoaded){
+                List<ProductEntity> products = state.products;
+
+                List<ProductEntity> re = products.where((e) => e.productID == productEntity.productID).toList();
+                if(re.isNotEmpty){
+                  isFavorite = true;
+                }
+                else{
+                  isFavorite = false;
+                }
+              }
+              return Positioned(
+                top: 10,
+                right: 10,
+                child: _favoriteButton(context, isFavorite),
+              );
+            }
           ),
         ],
       ),
@@ -132,9 +161,11 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-  Widget _favoriteButton(BuildContext context) {
+  Widget _favoriteButton(BuildContext context, bool state) {
     return InkWell(
-      onTap: () {},
+      onTap: () async {
+        context.read<FavoriteProductCubit>().toggleFavorite(productEntity);
+      },
       child: Container(
         width: 30,
         height: 30,
@@ -142,9 +173,9 @@ class ProductCard extends StatelessWidget {
           color: AppColors.backgroundColor,
           borderRadius: BorderRadius.circular(6),
         ),
-        child: const Center(
+        child: Center(
           child: Icon(
-            Icons.favorite_border,
+            state ? Icons.favorite : Icons.favorite_border,
             color: AppColors.primaryColor,
             size: 18,
           ),

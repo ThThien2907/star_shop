@@ -8,9 +8,9 @@ class ProductModel{
   final num price;
   final num oldPrice;
   final List<String> images;
-  final int quantityInStock;
-  final int salesNumber;
-  final double rating;
+  final num quantityInStock;
+  final num salesNumber;
+  final num rating;
   final List<ReviewModel> reviews;
 
   ProductModel({

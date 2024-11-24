@@ -25,32 +25,32 @@ class ProductsByCategoryPage extends StatelessWidget {
         create: (context) =>
             ProductsDisplayCubit(useCase: GetProductsByCategoryUseCase())
               ..getProducts(params: category.categoryID),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: BlocBuilder<ProductsDisplayCubit, ProductsDisplayState>(
-            builder: (context, state) {
-              if (state is ProductsLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
+        child: BlocBuilder<ProductsDisplayCubit, ProductsDisplayState>(
+          builder: (context, state) {
+            if (state is ProductsLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
 
-              if (state is ProductsLoadFailure) {
-                return AppErrorWidget(
-                  onPress: () {
-                    context.read<ProductsDisplayCubit>().getProducts(params: category.categoryID);
-                  },
-                );
-              }
+            if (state is ProductsLoadFailure) {
+              return AppErrorWidget(
+                onPress: () {
+                  context.read<ProductsDisplayCubit>().getProducts(params: category.categoryID);
+                },
+              );
+            }
 
-              if (state is ProductsLoaded) {
-                List<ProductEntity> products = state.products;
+            if (state is ProductsLoaded) {
+              List<ProductEntity> products = state.products;
 
-                return ProductsGridView(products: products);
-              }
-              return Container();
-            },
-          ),
+              return Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                child: ProductsGridView(products: products, itemCount: products.length,),
+              );
+            }
+            return Container();
+          },
         ),
       ),
     );

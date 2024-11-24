@@ -8,9 +8,6 @@ import 'package:star_shop/features/domain/product/repositories/product_repositor
 import 'package:star_shop/service_locator.dart';
 
 class ProductRepositoryImpl implements ProductRepository {
-
-
-
   ProductEntity productToEntity(ProductModel model) {
     return ProductEntity(
       productID: model.productID,
@@ -27,6 +24,22 @@ class ProductRepositoryImpl implements ProductRepository {
     );
   }
 
+  ProductModel productToModel(ProductEntity entity) {
+    return ProductModel(
+      productID: entity.productID,
+      title: entity.title,
+      description: entity.description,
+      categoryID: entity.categoryID,
+      price: entity.price,
+      oldPrice: entity.oldPrice,
+      images: entity.images,
+      quantityInStock: entity.quantityInStock,
+      salesNumber: entity.salesNumber,
+      rating: entity.rating,
+      reviews: entity.reviews.map((e) => reviewToModel(e)).toList(),
+    );
+  }
+
   ReviewEntity reviewToEntity(ReviewModel model) {
     return ReviewEntity(
       userId: model.userId,
@@ -34,6 +47,16 @@ class ProductRepositoryImpl implements ProductRepository {
       reviewId: model.reviewId,
       rating: model.rating,
       review: model.review,
+    );
+  }
+
+  ReviewModel reviewToModel(ReviewEntity entity) {
+    return ReviewModel(
+      userId: entity.userId,
+      userName: entity.userName,
+      reviewId: entity.reviewId,
+      rating: entity.rating,
+      review: entity.review,
     );
   }
 
@@ -59,7 +82,7 @@ class ProductRepositoryImpl implements ProductRepository {
     return response.fold(
       (error) {
         return Left(error);
-        },
+      },
       (data) {
         List<ProductEntity> products = List<ProductEntity>.from(
             data.map((e) => productToEntity(ProductModel.fromMap(e)))).toList();
@@ -72,5 +95,59 @@ class ProductRepositoryImpl implements ProductRepository {
   Future<Either> getProductsByName(String name) {
     // TODO: implement getProductsByName
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Either> addOrRemoveFavoriteProduct(ProductEntity productEntity) async {
+    ProductModel productModel = productToModel(productEntity);
+
+    var response = await sl<ProductFirebaseService>()
+        .addOrRemoveFavoriteProduct(productModel);
+
+    return response.fold(
+      (error) {
+        return Left(error);
+      },
+      (data) {
+        if(data){
+          return const Right(true);
+        }
+        else{
+          return const Right(false);
+        }
+      },
+    );
+  }
+
+  @override
+  Future<Either> getFavoriteProducts() async {
+    var response = await sl<ProductFirebaseService>().getFavoriteProducts();
+
+    return response.fold(
+      (error) {
+        return Left(error);
+      },
+      (data) {
+        List<ProductEntity> products = List<ProductEntity>.from(
+            data.map((e) => productToEntity(ProductModel.fromMap(e)))).toList();
+        return Right(products);
+      },
+    );
+  }
+
+  @override
+  Future<Either> getProducts(int limit) async {
+    var response = await sl<ProductFirebaseService>().getProducts(limit);
+
+    return response.fold(
+          (error) {
+        return Left(error);
+      },
+          (data) {
+        List<ProductEntity> products = List<ProductEntity>.from(
+            data.map((e) => productToEntity(ProductModel.fromMap(e)))).toList();
+        return Right(products);
+      },
+    );
   }
 }
