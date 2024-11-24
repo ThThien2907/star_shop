@@ -1,110 +1,99 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:star_shop/common/bloc/favorite/favorite_product_state.dart';
+import 'package:star_shop/common/widgets/app_bar/app_bar_notification_icon.dart';
+import 'package:star_shop/common/widgets/error/app_error_widget.dart';
+import 'package:star_shop/common/widgets/product/products_grid_view.dart';
+import 'package:star_shop/configs/theme/app_colors.dart';
+import 'package:star_shop/features/domain/product/entities/product_entity.dart';
+import 'package:star_shop/common/bloc/favorite/favorite_product_cubit.dart';
 
-class FavoritePage extends StatefulWidget {
+class FavoritePage extends StatelessWidget {
   const FavoritePage({super.key});
-
-  @override
-  State<FavoritePage> createState() => _FavoritePageState();
-}
-
-class _FavoritePageState extends State<FavoritePage> {
-
-  File? _image;
-
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    }
-  }
-
-  Future<String?> uploadImageWithDio(File imageFile) async {
-    final cloudName = "starshop"; // Replace with your Cloudinary cloud name
-    final uploadPreset = "products"; // Replace with your upload preset
-    final uploadUrl = "https://api.cloudinary.com/v1_1/$cloudName/image/upload";
-
-    try {
-      final dio = Dio();
-
-      // Prepare form data
-      FormData formData = FormData.fromMap({
-        "file": await MultipartFile.fromFile(imageFile.path),
-        "upload_preset": uploadPreset,
-      });
-
-      // Send POST request
-      final response = await dio.post(uploadUrl, data: formData);
-
-      if (response.statusCode == 200) {
-        final imageUrl = response.data["secure_url"];
-        return imageUrl; // Return the image URL
-      } else {
-        print("Error uploading image: ${response.statusCode}");
-        return null;
-      }
-    } catch (e) {
-      print("Error: $e");
-      return null;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      appBar: const AppBarNotificationIcon(
+        title: 'Favorites',
+        centerTitle: true,
+      ),
+      body: BlocBuilder<FavoriteProductCubit, FavoriteProductState>(
+        builder: (context, state) {
+          if (state is FavoriteProductInitialState) {
+            context.read<FavoriteProductCubit>().getFavorite();
+          }
+
+          if (state is FavoriteProductLoading) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.primaryColor,
+              ),
+            );
+          }
+
+          if (state is FavoriteProductLoadFailure) {
+            return AppErrorWidget(
+              onPress: () {
+                context.read<FavoriteProductCubit>().getFavorite();
+              },
+            );
+          }
+
+          if (state is FavoriteProductLoaded) {
+            List<ProductEntity> products = state.products;
+            if (products.isEmpty) {
+              return _emptyFavorite(context);
+            } else {
+              return Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                child: ProductsGridView(products: products, itemCount: products.length,),
+              );
+            }
+          }
+          return Container();
+        },
+      ),
+    );
+  }
+
+  Widget _emptyFavorite(BuildContext context){
+    return const Center(
+      child: SizedBox(
+        width: 250,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _image == null
-                ? Text("No image selected")
-                : Image.file(_image!, height: 200),
-            ElevatedButton(
-              onPressed: _pickImage,
-              child: Text("Select Image"),
+            Icon(
+              Icons.favorite,
+              color: AppColors.subtextColor,
+              size: 92,
             ),
-            SizedBox(height: 20,),
-            ElevatedButton(
-              onPressed: () async {
-                if (_image != null) {
-                  final imageUrl = await uploadImageWithDio(_image!);
-                  if (imageUrl != null) {
-                    print("Uploaded Image URL: $imageUrl");
-                    // Display the uploaded image URL or use it in your app
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        content: Text("Image Uploaded Successfully!\n\n$imageUrl"),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: Text("OK"),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else {
-                    print("Image upload failed");
-                  }
-                } else {
-                  print("No image selected");
-                }
-              },
-              child: Text("Upload to Cloudinary"),
+            SizedBox(
+              height: 16,
+            ),
+            Text(
+              'No Saved Items!',
+              style: TextStyle(
+                color: AppColors.textColor,
+                fontSize: 16,
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Text(
+              'You don’t have any saved items. Go to home and add some.',
+              style: TextStyle(
+                color: AppColors.subtextColor,
+                fontSize: 16,
+              ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
       ),
-      // body: Center(
-      //   child: Text('favorite page'),
-      // ),
     );
   }
 }
