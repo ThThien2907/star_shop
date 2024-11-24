@@ -6,6 +6,7 @@ import 'package:star_shop/common/widgets/error/app_error_widget.dart';
 import 'package:star_shop/common/widgets/product/products_grid_view.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/domain/product/entities/product_entity.dart';
+import 'package:star_shop/features/presentation/product/pages/view_all_products_page.dart';
 
 class HomePageTopSelling extends StatelessWidget {
   const HomePageTopSelling({super.key});
@@ -15,13 +16,32 @@ class HomePageTopSelling extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Hot Deal',
-          style: TextStyle(
-            fontSize: 20,
-            color: AppColors.textColor,
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          children: [
+            const Text(
+              'Top Selling',
+              style: TextStyle(
+                fontSize: 20,
+                color: AppColors.primaryTextColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Spacer(),
+            TextButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ViewAllProductsPage()));
+              },
+              child: const Text(
+                'View All Products',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: AppColors.subtextColor,
+                  decoration: TextDecoration.underline,
+                  decorationColor: AppColors.subtextColor,
+                ),
+              ),
+            )
+          ],
         ),
         const SizedBox(
           height: 16,
@@ -38,16 +58,22 @@ class HomePageTopSelling extends StatelessWidget {
 
             if (state is ProductsLoadFailure) {
               return Center(
-                child: AppErrorWidget(onPress: (){
-                  context.read<ProductsDisplayCubit>().getProducts(params: 8);
-                },),
+                child: AppErrorWidget(
+                  onPress: () {
+                    context.read<ProductsDisplayCubit>().getProducts(params: 8);
+                  },
+                ),
               );
             }
 
             if (state is ProductsLoaded) {
               List<ProductEntity> products = state.products;
 
-              return ProductsGridView(products: products, physics: const NeverScrollableScrollPhysics(),);
+              return ProductsGridView(
+                products: products,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: products.length,
+              );
             }
 
             return Container();

@@ -22,7 +22,7 @@ class HomePageCategories extends StatelessWidget {
               'Categories',
               style: TextStyle(
                   fontSize: 20,
-                  color: AppColors.textColor,
+                  color: AppColors.primaryTextColor,
                   fontWeight: FontWeight.bold),
             ),
             const Spacer(),
