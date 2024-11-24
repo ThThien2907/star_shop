@@ -96,6 +96,7 @@ class _AppBottomNavState extends State<AppBottomNav> {
                 index: activePage,
                 children: listPage,
               ),
+              // body: listPage[activePage],
               bottomNavigationBar: BottomNavigationBar(
                 items: listItem,
                 currentIndex: activePage,

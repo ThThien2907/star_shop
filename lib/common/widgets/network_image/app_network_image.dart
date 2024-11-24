@@ -1,8 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:star_shop/configs/assets/app_images.dart';
 
 class AppNetworkImage extends StatelessWidget {
-  const AppNetworkImage({super.key, required this.width, required this.height, required this.image, this.radius});
+  const AppNetworkImage(
+      {super.key,
+      required this.width,
+      required this.height,
+      required this.image,
+      this.radius});
 
   final double width;
   final double height;
@@ -14,19 +20,21 @@ class AppNetworkImage extends StatelessWidget {
     return SizedBox(
       width: width,
       height: height,
-      child: ClipRRect(
-        borderRadius: radius != null ? BorderRadius.circular(radius!) : BorderRadius.zero,
-        child: FadeInImage.assetNetwork(
-          placeholder: AppImages.imgNotFound,
-          image: image,
-          imageErrorBuilder:
-              (context, error, stackTrace) {
-            return Image.asset(
-              AppImages.imgNotFound,
-            );
-          },
-          fit: BoxFit.cover,
+      child: CachedNetworkImage(
+        imageUrl: image,
+        imageBuilder: (context, imageProvider) => Container(
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+            ),
+            borderRadius: BorderRadius.circular(radius!)
+          ),
         ),
+        placeholder: (context, url) => Image.asset(AppImages.imgNotFound),
+        errorWidget: (context, url, error) => Image.asset(AppImages.imgNotFound),
       ),
     );
   }
