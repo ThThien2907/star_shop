@@ -5,11 +5,14 @@ import 'package:star_shop/features/data/category/data_sources/category_firebase_
 import 'package:star_shop/features/data/category/repositories/category_repository_impl.dart';
 import 'package:star_shop/features/data/location/data_sources/api_location_service.dart';
 import 'package:star_shop/features/data/location/repositories/location_repository_impl.dart';
+import 'package:star_shop/features/data/order/data_sources/order_firebase_service.dart';
+import 'package:star_shop/features/data/order/repositories/order_repository_impl.dart';
 import 'package:star_shop/features/data/product/data_sources/product_firebase_service.dart';
 import 'package:star_shop/features/data/product/repositories/product_repository_impl.dart';
 import 'package:star_shop/features/domain/auth/repositories/auth_repository.dart';
 import 'package:star_shop/features/domain/category/repositories/category_repository.dart';
 import 'package:star_shop/features/domain/location/repositories/location_repository.dart';
+import 'package:star_shop/features/domain/order/repositories/order_repository.dart';
 import 'package:star_shop/features/domain/product/repositories/product_repository.dart';
 
 final sl = GetIt.instance;
@@ -33,6 +36,13 @@ Future<void> initializeDependencies() async{
       ProductFirebaseService()
   );
 
+  sl.registerSingleton<OrderFirebaseService>(
+      OrderFirebaseService()
+  );
+
+
+
+
   //Repositories
   sl.registerSingleton<AuthRepository>(
     AuthRepositoryImpl()
@@ -48,6 +58,10 @@ Future<void> initializeDependencies() async{
 
   sl.registerSingleton<ProductRepository>(
       ProductRepositoryImpl()
+  );
+
+  sl.registerSingleton<OrderRepository>(
+      OrderRepositoryImpl()
   );
 
   //Use cases

@@ -7,6 +7,7 @@ class AppButton extends StatelessWidget {
   final Widget? widget;
   final double? width;
   final double? height;
+  final Color? color;
 
   const AppButton({
     super.key,
@@ -15,6 +16,7 @@ class AppButton extends StatelessWidget {
     this.widget,
     this.width,
     this.height,
+    this.color,
   });
 
   @override
@@ -27,7 +29,7 @@ class AppButton extends StatelessWidget {
           width ?? MediaQuery.of(context).size.width,
           height ?? 50,
         ),
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: color ?? AppColors.primaryColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
