@@ -2,7 +2,7 @@ class ReviewEntity {
   final String userId;
   final String userName;
   final String reviewId;
-  final double rating;
+  final num rating;
   final String review;
 
   ReviewEntity({

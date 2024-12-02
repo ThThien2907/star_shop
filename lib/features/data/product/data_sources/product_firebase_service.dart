@@ -4,12 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:star_shop/features/data/product/models/product_model.dart';
 
 class ProductFirebaseService {
-
   Future<Either> getProducts(int limit) async {
     try {
       var response = await FirebaseFirestore.instance
           .collection('products')
-      .limit(limit)
+          .limit(limit)
           .get(const GetOptions(source: Source.server));
       var data = response.docs.map((e) => e.data()).toList();
       return Right(data);
@@ -37,6 +36,19 @@ class ProductFirebaseService {
       var response = await FirebaseFirestore.instance
           .collection('products')
           .where('categoryID', isEqualTo: categoryID)
+          .get(const GetOptions(source: Source.server));
+      var data = response.docs.map((e) => e.data()).toList();
+      return Right(data);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either> getProductsByName(String name) async {
+    try {
+      var response = await FirebaseFirestore.instance
+          .collection('products')
+          .where('title', isEqualTo: name)
           .get(const GetOptions(source: Source.server));
       var data = response.docs.map((e) => e.data()).toList();
       return Right(data);

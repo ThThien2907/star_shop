@@ -7,11 +7,18 @@ import 'package:star_shop/common/bloc/favorite/favorite_product_cubit.dart';
 import 'package:star_shop/common/bloc/favorite/favorite_product_state.dart';
 import 'package:star_shop/common/widgets/app_bar/basic_app_bar.dart';
 import 'package:star_shop/common/widgets/button/reactive_button.dart';
+import 'package:star_shop/common/widgets/snack_bar/app_snack_bar.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
+import 'package:star_shop/features/domain/order/entities/product_ordered_entity.dart';
+import 'package:star_shop/features/domain/order/use_cases/add_product_to_cart_use_case.dart';
 import 'package:star_shop/features/domain/product/entities/product_entity.dart';
+import 'package:star_shop/features/presentation/cart/bloc/cart_display_cubit.dart';
+import 'package:star_shop/features/presentation/product/bloc/product_image_selection_cubit.dart';
+import 'package:star_shop/features/presentation/product/bloc/product_quantity_selection_cubit.dart';
 import 'package:star_shop/features/presentation/product/widgets/product_detail_image_slider.dart';
 import 'package:star_shop/features/presentation/product/widgets/product_detail_information.dart';
 import 'package:star_shop/features/presentation/product/widgets/product_detail_item_image.dart';
+import 'package:star_shop/features/presentation/product/widgets/product_detail_quantity_selection.dart';
 import 'package:star_shop/features/presentation/product/widgets/product_detail_rating_review.dart';
 
 class ProductDetailPage extends StatefulWidget {
@@ -24,9 +31,11 @@ class ProductDetailPage extends StatefulWidget {
 }
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
-  CarouselSliderController buttonCarouselController =
-      CarouselSliderController();
-  int selectedImage = 0;
+
+  final CarouselSliderController buttonCarouselController =
+  CarouselSliderController();
+
+  late ProductOrderedEntity productOrdered;
 
   @override
   Widget build(BuildContext context) {
@@ -76,10 +85,28 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           )
         ],
       ),
-      body: BlocProvider(
-        create: (context) => ButtonCubit(),
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => ButtonCubit(),),
+          BlocProvider(create: (context) => ProductImageSelectionCubit(),),
+          BlocProvider(create: (context) => ProductQuantitySelectionCubit(),),
+        ],
+
         child: BlocListener<ButtonCubit, ButtonState>(
-          listener: (context, state) {},
+          listener: (context, state) {
+            if (state is ButtonSuccessState) {
+              context.read<CartDisplayCubit>().addProductToCart(productOrdered);
+              AppSnackBar.showAppSnackBar(
+                  context: context,
+                  title: 'The product has been added to the cart!');
+            }
+
+            if (state is ButtonFailureState) {
+              AppSnackBar.showAppSnackBar(
+                  context: context,
+                  title: 'The product cannot be added to the cart!');
+            }
+          },
           child: Stack(
             children: [
               SingleChildScrollView(
@@ -88,11 +115,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     ProductDetailImageSlider(
                       buttonCarouselController: buttonCarouselController,
                       images: widget.productEntity.images,
-                      onPageChanged: (index, reason) {
-                        setState(() {
-                          selectedImage = index;
-                        });
-                      },
                     ),
                     Padding(
                       padding: const EdgeInsets.all(16),
@@ -105,18 +127,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (context, index) {
                                   return ProductDetailItemImage(
-                                    selectedImage: selectedImage,
+                                    buttonCarouselController: buttonCarouselController,
                                     index: index,
-                                    images: widget.productEntity.images,
-                                    onTap: () {
-                                          setState(() {
-                                            selectedImage = index;
-                                          });
-                                          buttonCarouselController.animateToPage(
-                                              index,
-                                              duration: const Duration(milliseconds: 200),
-                                              curve: Curves.linear);
-                                    },
+                                    images: widget.productEntity.images[index],
                                   );
                                 },
                                 separatorBuilder: (context, index) {
@@ -129,7 +142,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           const SizedBox(
                             height: 16,
                           ),
-                          ProductDetailInformation(productEntity: widget.productEntity),
+                          ProductDetailInformation(
+                              productEntity: widget.productEntity),
                           const SizedBox(
                             height: 16,
                           ),
@@ -145,16 +159,54 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: Builder(builder: (context) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                    child: ReactiveButton(
-                      onPressed: () {},
-                      title: 'Add to Cart',
-                    ),
-                  );
-                }),
+                child: Container(
+                  padding: const EdgeInsets.only(
+                      left: 16, right: 16, bottom: 16, top: 8),
+                  color: AppColors.backgroundColor,
+                  child: Row(
+                    children: [
+                      const ProductDetailQuantitySelection(),
+                      const SizedBox(
+                        width: 16,
+                      ),
+                      BlocBuilder<ProductQuantitySelectionCubit, int>(
+                        builder: (context, state) {
+                          return Expanded(
+                            child: Builder(builder: (context) {
+                              return ReactiveButton(
+                                onPressed: () {
+                                  if (state == 0) {
+                                    AppSnackBar.showAppSnackBar(
+                                        context: context,
+                                        title: 'Please select product quantity.');
+                                  } else {
+                                    ProductEntity product = widget.productEntity;
+                                    productOrdered = ProductOrderedEntity(
+                                      productID: product.productID,
+                                      title: product.title,
+                                      price: product.price,
+                                      oldPrice: product.oldPrice,
+                                      totalPrice: state * product.price,
+                                      images: product.images[0],
+                                      quantityInStock:
+                                      product.quantityInStock,
+                                      quantity: state,
+                                    );
+                                    context.read<ButtonCubit>().execute(
+                                          useCase: AddProductToCartUseCase(),
+                                          params: productOrdered,
+                                        );
+                                  }
+                                },
+                                title: 'Add to Cart',
+                              );
+                            }),
+                          );
+                        }
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
