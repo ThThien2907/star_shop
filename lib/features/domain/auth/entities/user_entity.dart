@@ -24,9 +24,4 @@ class UserEntity {
     required this.gender,
     required this.role,
   });
-
-  @override
-  String toString() {
-    return 'UserEntity{userId: $userId, fullName: $fullName, email: $email, dob: $dob, phoneNumber: $phoneNumber, address: $address, city: $city, district: $district, ward: $ward, gender: $gender, role: $role}';
-  }
 }
