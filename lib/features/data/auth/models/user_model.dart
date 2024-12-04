@@ -4,10 +4,6 @@ class UserModel {
   final String? email;
   final String? dob;
   final String? phoneNumber;
-  final String? address;
-  final String? city;
-  final String? district;
-  final String? ward;
   final String? gender;
   final String? role;
 
@@ -17,10 +13,6 @@ class UserModel {
     required this.email,
     required this.dob,
     required this.phoneNumber,
-    required this.address,
-    required this.city,
-    required this.district,
-    required this.ward,
     required this.gender,
     required this.role,
   });
@@ -32,10 +24,6 @@ class UserModel {
       'email': email,
       'dob': dob,
       'phoneNumber': phoneNumber,
-      'address': address,
-      'city': city,
-      'district': district,
-      'ward': ward,
       'gender': gender,
       'role': role,
     };
@@ -48,10 +36,6 @@ class UserModel {
       email: map['email'] ?? '',
       dob: map['dob'] ?? '',
       phoneNumber: map['phoneNumber'] ?? '',
-      address: map['address'] ?? '',
-      city: map['city'] ?? '',
-      district: map['district'] ?? '',
-      ward: map['ward'] ?? '',
       gender: map['gender'] ?? '',
       role: map['role'] ?? '',
     );

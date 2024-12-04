@@ -22,7 +22,11 @@ class UserInfoDisplayCubit extends Cubit<UserInfoDisplayState> {
         (data) {
           if (data == null) {
             emit(UserInfoIsEmpty());
-          } else {
+          }
+          else if (data == 'UserAddressIsEmpty'){
+            emit(UserAddressIsEmpty());
+          }
+          else {
             UserEntity userEntity = data;
             // if (userEntity.role == 'AD') {
             //   emit(IsAdmin(userEntity: userEntity));

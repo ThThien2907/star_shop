@@ -25,3 +25,5 @@ class UserInfoLoadFailure extends UserInfoDisplayState{
 class EmailNotVerified extends UserInfoDisplayState{}
 
 class UserInfoIsEmpty extends UserInfoDisplayState{}
+
+class UserAddressIsEmpty extends UserInfoDisplayState{}
