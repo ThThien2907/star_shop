@@ -61,4 +61,8 @@ class CartDisplayCubit extends Cubit<CartDisplayState> {
       },
     );
   }
+
+  displayInitialState(){
+    emit(CartDisplayInitialState(products: []));
+  }
 }
