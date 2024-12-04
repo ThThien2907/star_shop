@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_shop/features/domain/order/entities/product_ordered_entity.dart';
-import 'package:star_shop/features/domain/order/use_cases/add_product_to_cart_use_case.dart';
 import 'package:star_shop/features/domain/order/use_cases/get_products_from_cart_use_case.dart';
 import 'package:star_shop/features/domain/order/use_cases/remove_product_from_cart_use_case.dart';
 import 'package:star_shop/features/domain/order/use_cases/update_product_ordered_quantity_use_case.dart';
