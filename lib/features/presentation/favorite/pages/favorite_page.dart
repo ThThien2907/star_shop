@@ -8,8 +8,20 @@ import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/domain/product/entities/product_entity.dart';
 import 'package:star_shop/common/bloc/favorite/favorite_product_cubit.dart';
 
-class FavoritePage extends StatelessWidget {
+class FavoritePage extends StatefulWidget {
   const FavoritePage({super.key});
+
+  @override
+  State<FavoritePage> createState() => _FavoritePageState();
+}
+
+class _FavoritePageState extends State<FavoritePage> {
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<FavoriteProductCubit>().getFavorite();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +33,6 @@ class FavoritePage extends StatelessWidget {
       body: BlocBuilder<FavoriteProductCubit, FavoriteProductState>(
         builder: (context, state) {
           if (state is FavoriteProductInitialState) {
-            context.read<FavoriteProductCubit>().getFavorite();
           }
 
           if (state is FavoriteProductLoading) {
@@ -33,10 +44,12 @@ class FavoritePage extends StatelessWidget {
           }
 
           if (state is FavoriteProductLoadFailure) {
-            return AppErrorWidget(
-              onPress: () {
-                context.read<FavoriteProductCubit>().getFavorite();
-              },
+            return Center(
+              child: AppErrorWidget(
+                onPress: () {
+                  context.read<FavoriteProductCubit>().getFavorite();
+                },
+              ),
             );
           }
 

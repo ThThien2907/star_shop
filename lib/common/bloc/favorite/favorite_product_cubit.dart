@@ -39,4 +39,8 @@ class FavoriteProductCubit extends Cubit<FavoriteProductState> {
       },
     );
   }
+
+  displayInitialState(){
+    emit(FavoriteProductInitialState(products: []));
+  }
 }
