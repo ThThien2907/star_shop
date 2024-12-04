@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_shop/common/bloc/auth/user_info_display_cubit.dart';
 import 'package:star_shop/common/bloc/auth/user_info_display_state.dart';
+import 'package:star_shop/common/bloc/favorite/favorite_product_cubit.dart';
 import 'package:star_shop/common/widgets/error/app_error_widget.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/domain/auth/entities/user_entity.dart';
+import 'package:star_shop/features/presentation/auth/pages/update_address_page.dart';
 import 'package:star_shop/features/presentation/auth/pages/update_profile_page.dart';
 import 'package:star_shop/features/presentation/auth/pages/verify_email_page.dart';
+import 'package:star_shop/features/presentation/cart/bloc/cart_display_cubit.dart';
 import 'package:star_shop/features/presentation/cart/pages/cart_page.dart';
 import 'package:star_shop/features/presentation/favorite/pages/favorite_page.dart';
 import 'package:star_shop/features/presentation/home/pages/home_page.dart';
@@ -76,6 +79,10 @@ class _AppBottomNavState extends State<AppBottomNav> {
 
           if (state is UserInfoIsEmpty) {
             return const UpdateProfilePage();
+          }
+
+          if (state is UserAddressIsEmpty) {
+            return const UpdateAddressPage();
           }
 
           if (state is EmailNotVerified) {
