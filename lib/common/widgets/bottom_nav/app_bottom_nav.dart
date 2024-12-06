@@ -4,7 +4,6 @@ import 'package:star_shop/common/bloc/auth/user_info_display_cubit.dart';
 import 'package:star_shop/common/bloc/auth/user_info_display_state.dart';
 import 'package:star_shop/common/widgets/error/app_error_widget.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
-import 'package:star_shop/features/domain/auth/entities/user_address_entity.dart';
 import 'package:star_shop/features/domain/auth/entities/user_entity.dart';
 import 'package:star_shop/features/presentation/account/pages/account_page.dart';
 import 'package:star_shop/features/presentation/auth/pages/add_or_update_address_page.dart';

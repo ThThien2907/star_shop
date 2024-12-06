@@ -10,7 +10,6 @@ import 'package:star_shop/common/widgets/button/reactive_button.dart';
 import 'package:star_shop/common/widgets/input_field/app_text_field.dart';
 import 'package:star_shop/common/widgets/snack_bar/app_snack_bar.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
-import 'package:star_shop/features/domain/auth/entities/user_address_entity.dart';
 import 'package:star_shop/features/domain/auth/entities/user_entity.dart';
 import 'package:star_shop/features/domain/auth/use_cases/add_or_update_profile_use_case.dart';
 import 'package:star_shop/features/presentation/auth/pages/add_or_update_address_page.dart';
