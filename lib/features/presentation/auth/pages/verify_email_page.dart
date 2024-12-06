@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/presentation/auth/bloc/verify_email_cubit.dart';
 import 'package:star_shop/features/presentation/auth/bloc/verify_email_state.dart';
-import 'package:star_shop/features/presentation/auth/pages/update_profile_page.dart';
+import 'package:star_shop/features/presentation/auth/pages/add_or_update_profile_page.dart';
 
 class VerifyEmailPage extends StatefulWidget {
   const VerifyEmailPage({super.key});
@@ -57,7 +57,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const UpdateProfilePage()));
+                      builder: (context) => const AddOrUpdateProfilePage(isUpdateProfile: false)));
             }
             if (state is NotVerifiedState) {}
           },

@@ -41,7 +41,7 @@ class AuthFirebaseService {
     return false;
   }
 
-  Future<Either> updateProfile(UserModel user) async {
+  Future<Either> addOrUpdateProfile(UserModel user) async {
     try {
       var response = await FirebaseFirestore.instance
           .collection('users')

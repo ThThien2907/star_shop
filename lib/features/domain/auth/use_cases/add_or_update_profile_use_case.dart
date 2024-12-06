@@ -4,9 +4,9 @@ import 'package:star_shop/features/domain/auth/entities/user_entity.dart';
 import 'package:star_shop/features/domain/auth/repositories/auth_repository.dart';
 import 'package:star_shop/service_locator.dart';
 
-class UpdateProfileUseCase extends UseCase<Either, UserEntity>{
+class AddOrUpdateProfileUseCase extends UseCase<Either, UserEntity>{
   @override
   Future<Either> call({UserEntity? params}) async {
-    return await sl<AuthRepository>().updateProfile(params!);
+    return await sl<AuthRepository>().addOrUpdateProfile(params!);
   }
 }

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:star_shop/common/bloc/auth/user_info_display_cubit.dart';
 import 'package:star_shop/common/bloc/button/button_cubit.dart';
 import 'package:star_shop/common/bloc/button/button_state.dart';
 import 'package:star_shop/common/widgets/app_bar/basic_app_bar.dart';
@@ -8,36 +10,52 @@ import 'package:star_shop/common/widgets/button/reactive_button.dart';
 import 'package:star_shop/common/widgets/input_field/app_text_field.dart';
 import 'package:star_shop/common/widgets/snack_bar/app_snack_bar.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
+import 'package:star_shop/features/domain/auth/entities/user_address_entity.dart';
 import 'package:star_shop/features/domain/auth/entities/user_entity.dart';
-import 'package:star_shop/features/domain/auth/use_cases/update_profile_use_case.dart';
-import 'package:star_shop/features/presentation/auth/pages/update_address_page.dart';
+import 'package:star_shop/features/domain/auth/use_cases/add_or_update_profile_use_case.dart';
+import 'package:star_shop/features/presentation/auth/pages/add_or_update_address_page.dart';
 
-class UpdateProfilePage extends StatefulWidget {
-  const UpdateProfilePage({super.key});
+class AddOrUpdateProfilePage extends StatefulWidget {
+  const AddOrUpdateProfilePage(
+      {super.key, this.fullName, this.dob, this.phoneNumber, this.gender, required this.isUpdateProfile});
+
+  final String? fullName;
+  final String? dob;
+  final String? phoneNumber;
+  final String? gender;
+  final bool isUpdateProfile;
 
   @override
-  State<UpdateProfilePage> createState() => _UpdateProfilePageState();
+  State<AddOrUpdateProfilePage> createState() => _AddOrUpdateProfilePageState();
 }
 
-class _UpdateProfilePageState extends State<UpdateProfilePage> {
+class _AddOrUpdateProfilePageState extends State<AddOrUpdateProfilePage> {
   final TextEditingController dobController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController genderController = TextEditingController();
 
   DateTime? pickedDate;
-  DateTime? initialDate = DateTime.now();
+  DateTime? initialDate;
+
+  DateFormat dateFormat = DateFormat('dd/MM/yyyy');
 
   @override
   void initState() {
     super.initState();
+    nameController.text = widget.fullName ?? '';
+    dobController.text = widget.dob ?? '';
+    phoneController.text = widget.phoneNumber ?? '';
+    genderController.text = widget.gender ?? '';
+    
+    initialDate = widget.isUpdateProfile ? dateFormat.parse(widget.dob!) : DateTime.now();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: const BasicAppBar(title: 'Update Your Profile', centerTitle: true,),
+      appBar: BasicAppBar(title: widget.isUpdateProfile ? 'Update Profile' : 'New Profile', centerTitle: true,),
       body: BlocProvider(
         create: (context) => ButtonCubit(),
         child: BlocListener<ButtonCubit, ButtonState>(
@@ -47,7 +65,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                 content: Text(
                   state.errorCode,
                   style:
-                      const TextStyle(color: AppColors.textColor, fontSize: 16),
+                  const TextStyle(color: AppColors.textColor, fontSize: 16),
                 ),
                 behavior: SnackBarBehavior.floating,
               );
@@ -55,10 +73,17 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             }
 
             if (state is ButtonSuccessState) {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const UpdateAddressPage()),
-                  (route) => false);
+              if (!widget.isUpdateProfile) {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AddOrUpdateAddressPage(isFirstAddress: true,)),
+                        (route) => false);
+              }
+              else {
+                context.read<UserInfoDisplayCubit>().getUser();
+                Navigator.pop(context);
+              }
             }
           },
           child: Padding(
@@ -97,7 +122,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                 Builder(
                   builder: (context) {
                     return ReactiveButton(
-                      title: 'Finish',
+                      title: widget.isUpdateProfile ? 'Save' : 'Continue',
                       onPressed: () {
                         if (nameController.text.isEmpty ||
                             phoneController.text.isEmpty ||
@@ -119,7 +144,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                             role: 'UR',
                           );
                           context.read<ButtonCubit>().execute(
-                              params: user, useCase: UpdateProfileUseCase());
+                              params: user,
+                              useCase: AddOrUpdateProfileUseCase());
                         }
                       },
                     );
@@ -154,8 +180,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
           if (pickedDate != null && pickedDate != initialDate) {
             initialDate = pickedDate;
-            dobController.text =
-                '${pickedDate!.day}/${pickedDate!.month}/${pickedDate!.year}';
+            dobController.text = dateFormat.format(pickedDate!);
           }
         },
       ),
@@ -194,13 +219,15 @@ class GenderDropdownButton extends StatefulWidget {
 }
 
 class _GenderDropdownButtonState extends State<GenderDropdownButton> {
-  final List<String> gender = ['Male', 'Female', 'Other Gender'];
+  final List<String> genders = ['Male', 'Female', 'Other Gender'];
   late String initialGender;
 
   @override
   void initState() {
     super.initState();
-    initialGender = gender[0];
+    initialGender =
+    widget.genderController.text.isEmpty ? genders[0] : widget.genderController
+        .text;
     widget.genderController.text = initialGender;
   }
 
@@ -213,7 +240,7 @@ class _GenderDropdownButtonState extends State<GenderDropdownButton> {
       ),
       child: DropdownButton(
         value: initialGender,
-        items: gender.map((value) {
+        items: genders.map((value) {
           return DropdownMenuItem(
             value: value,
             child: Text(value),

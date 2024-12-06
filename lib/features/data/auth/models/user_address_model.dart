@@ -3,7 +3,9 @@ class UserAddressModel {
   final String addressName;
   final String detailedAddress;
   final String city;
+  final String cityCode;
   final String district;
+  final String districtCode;
   final String ward;
   final bool isDefault;
 
@@ -12,7 +14,9 @@ class UserAddressModel {
     required this.addressName,
     required this.detailedAddress,
     required this.city,
+    required this.cityCode,
     required this.district,
+    required this.districtCode,
     required this.ward,
     required this.isDefault,
   });
@@ -23,7 +27,9 @@ class UserAddressModel {
       'addressName': addressName,
       'detailedAddress': detailedAddress,
       'city': city,
+      'cityCode': cityCode,
       'district': district,
+      'districtCode': districtCode,
       'ward': ward,
       'isDefault': isDefault,
     };
@@ -35,7 +41,9 @@ class UserAddressModel {
       addressName: map['addressName'],
       detailedAddress: map['detailedAddress'],
       city: map['city'],
+      cityCode: map['cityCode'],
       district: map['district'],
+      districtCode: map['districtCode'],
       ward: map['ward'],
       isDefault: map['isDefault'],
     );

@@ -5,7 +5,9 @@ import 'package:star_shop/features/domain/auth/entities/user_entity.dart';
 import 'package:star_shop/features/domain/auth/use_cases/get_user_use_case.dart';
 
 class UserInfoDisplayCubit extends Cubit<UserInfoDisplayState> {
-  UserInfoDisplayCubit() : super(UserInfoLoading());
+  UserInfoDisplayCubit() : super(UserInfoInitialState());
+
+  late UserEntity userEntity;
 
   Future<void> getUser() async {
     emit(UserInfoLoading());
@@ -27,7 +29,7 @@ class UserInfoDisplayCubit extends Cubit<UserInfoDisplayState> {
             emit(UserAddressIsEmpty());
           }
           else {
-            UserEntity userEntity = data;
+            userEntity = data;
             // if (userEntity.role == 'AD') {
             //   emit(IsAdmin(userEntity: userEntity));
             // }else{

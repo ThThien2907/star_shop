@@ -26,9 +26,9 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either> updateProfile(UserEntity user) async {
+  Future<Either> addOrUpdateProfile(UserEntity user) async {
     var userModel = userToModel(user);
-    var response = await sl<AuthFirebaseService>().updateProfile(userModel);
+    var response = await sl<AuthFirebaseService>().addOrUpdateProfile(userModel);
     return response.fold(
       (error) {
         return Left(error.toString());
@@ -85,13 +85,15 @@ class AuthRepositoryImpl implements AuthRepository {
 
   UserAddressModel userAddressToModel(UserAddressEntity user) {
     return UserAddressModel(
-      addressId: user.addressId,
-      addressName: user.addressName,
-      detailedAddress: user.detailedAddress,
-      city: user.city,
-      district: user.district,
-      ward: user.ward,
-      isDefault: user.isDefault,
+      addressId: user.addressId!,
+      addressName: user.addressName!,
+      detailedAddress: user.detailedAddress!,
+      city: user.city!,
+      cityCode: user.cityCode!,
+      district: user.district!,
+      districtCode: user.districtCode!,
+      ward: user.ward!,
+      isDefault: user.isDefault!,
     );
   }
 
@@ -101,7 +103,9 @@ class AuthRepositoryImpl implements AuthRepository {
       addressName: user.addressName,
       detailedAddress: user.detailedAddress,
       city: user.city,
+      cityCode: user.cityCode,
       district: user.district,
+      districtCode: user.districtCode,
       ward: user.ward,
       isDefault: user.isDefault,
     );

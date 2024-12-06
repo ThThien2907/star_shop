@@ -4,6 +4,8 @@ class UserInfoDisplayState {}
 
 class UserInfoLoading extends UserInfoDisplayState{}
 
+class UserInfoInitialState extends UserInfoDisplayState{}
+
 class UserInfoLoaded extends UserInfoDisplayState{
   final UserEntity userEntity;
 
