@@ -38,7 +38,7 @@ class ReactiveButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         minimumSize: Size(
           width ?? MediaQuery.of(context).size.width,
-          height ?? 50,
+          height ?? 60,
         ),
         backgroundColor: AppColors.primaryColor,
         shape: RoundedRectangleBorder(
@@ -49,7 +49,7 @@ class ReactiveButton extends StatelessWidget {
           Text(
             title ?? '',
             style: const TextStyle(
-              color: Colors.white,
+              color: AppColors.primaryTextColor,
               fontWeight: FontWeight.w400,
               fontSize: 16,
             ),
@@ -63,7 +63,7 @@ class ReactiveButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         minimumSize: Size(
           width ?? MediaQuery.of(context).size.width,
-          height ?? 50,
+          height ?? 60,
         ),
         backgroundColor: AppColors.primaryColor,
         shape: RoundedRectangleBorder(

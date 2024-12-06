@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 
-class AppButton extends StatelessWidget {
+class AppButtonOutline extends StatelessWidget {
   final VoidCallback onPressed;
   final String? title;
   final Widget? widget;
@@ -9,7 +9,7 @@ class AppButton extends StatelessWidget {
   final double? height;
   final Color? color;
 
-  const AppButton({
+  const AppButtonOutline({
     super.key,
     required this.onPressed,
     this.title,
@@ -29,9 +29,12 @@ class AppButton extends StatelessWidget {
           width ?? MediaQuery.of(context).size.width,
           height ?? 60,
         ),
-        backgroundColor: color ?? AppColors.primaryColor,
+        backgroundColor: AppColors.backgroundColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
+          side: BorderSide(
+            color: color ?? AppColors.grey,
+          ),
         ),
       ),
       child: widget ??
