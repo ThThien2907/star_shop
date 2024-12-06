@@ -1,83 +1,126 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:star_shop/common/bloc/auth/user_info_display_cubit.dart';
+import 'package:star_shop/common/bloc/auth/user_info_display_state.dart';
+import 'package:star_shop/common/widgets/app_bar/basic_app_bar.dart';
+import 'package:star_shop/common/widgets/button/app_button.dart';
+import 'package:star_shop/common/widgets/error/app_error_widget.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/domain/auth/entities/user_entity.dart';
-import 'package:star_shop/features/domain/auth/use_cases/get_user_use_case.dart';
-import 'package:star_shop/features/domain/auth/use_cases/update_profile_use_case.dart';
-import 'package:star_shop/features/presentation/auth/pages/sign_in_page.dart';
+import 'package:star_shop/features/presentation/auth/pages/add_or_update_profile_page.dart';
+import 'package:star_shop/features/presentation/profile/widgets/profile_page_item.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text('Profile page'),
-          // Text(FirebaseAuth.instance.currentUser!.uid ?? ''),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignInPage()),
-                    (route) => false);
-                if (FirebaseAuth.instance.currentUser != null) {
-                  FirebaseAuth.instance.signOut();
-                }
-              },
-              child: Text('log out')),
-          SizedBox(
-            height: 40,
-          ),
-          ElevatedButton(
-              onPressed: () async {
-                var user = UserEntity(
-                  userId: 'hehe',
-                  fullName: 'Than 123h Thien',
-                  email: 'thien@gmail.com',
-                  dob: '29/7/2003',
-                  phoneNumber: '0768628508',
-                  address: '11  bang',
-                  city: 'HCM',
-                  district: 'Tan ',
-                  ward: ' 14',
-                  gender: 'Male',
-                  role: 'UR',
-                );
+      appBar: const BasicAppBar(
+        title: 'My Profile',
+        centerTitle: true,
+      ),
+      body: BlocBuilder<UserInfoDisplayCubit, UserInfoDisplayState>(
+        builder: (context, state) {
+          if (state is UserInfoLoading) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.primaryColor,
+              ),
+            );
+          }
 
-                var response = await UpdateProfileUseCase().call(params: user);
-                response.fold(
-                  (ifLeft) {},
-                  (ifRight) {
-                    var snackBar = SnackBar(
-                      content: Text(
-                        ifRight,
-                        style: TextStyle(color: AppColors.textColor, fontSize: 16),
-                      ),
-                      behavior: SnackBarBehavior.floating,
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  },
-                );
-              },
-              child: Text('log out')),
+          if (state is UserInfoLoadFailure) {
+            return Center(
+              child: AppErrorWidget(
+                onPress: () {
+                  context.read<UserInfoDisplayCubit>().getUser();
+                },
+              ),
+            );
+          }
 
-          SizedBox(
-            height: 40,
-          ),
-          ElevatedButton(
-              onPressed: () async {
-                var response = await GetUserUseCase().call(params: FirebaseAuth.instance.currentUser!.uid);
-                response.fold((ifLeft){}, (ifRight){
-                  UserEntity user = ifRight;
-                  print(user.toString());
-                },);
-              },
-              child: Text('log out')),
-        ],
+          if (state is UserInfoLoaded) {
+            UserEntity userEntity = state.userEntity;
+
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  ProfilePageItem(
+                    title: 'Full Name',
+                    value: userEntity.fullName,
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  ProfilePageItem(
+                    title: 'Email Address',
+                    value: userEntity.email,
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  ProfilePageItem(
+                    title: 'Date of Birth',
+                    value: userEntity.dob,
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  ProfilePageItem(
+                    title: 'Gender',
+                    value: userEntity.gender,
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  ProfilePageItem(
+                    title: 'Phone Number',
+                    value: userEntity.phoneNumber,
+                  ),
+                  const SizedBox(
+                    height: 48,
+                  ),
+                  AppButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddOrUpdateProfilePage(
+                            isUpdateProfile: true,
+                            fullName: userEntity.fullName,
+                            dob: userEntity.dob,
+                            phoneNumber: userEntity.phoneNumber,
+                            gender: userEntity.gender,
+                          ),
+                        ),
+                      );
+                    },
+                    title: 'Edit My Profile',
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return Container();
+        },
       ),
     );
   }
