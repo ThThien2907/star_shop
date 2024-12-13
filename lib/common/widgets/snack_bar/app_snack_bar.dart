@@ -23,10 +23,14 @@ class AppSnackBar {
         children: [
           const Icon(Icons.cancel_outlined, color: AppColors.textColor,),
           const SizedBox(width: 8,),
-          Text(
-            title,
-            style: const TextStyle(
-                color: AppColors.textColor, fontSize: 16),
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(
+                  color: AppColors.textColor, fontSize: 16),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),
@@ -44,10 +48,12 @@ class AppSnackBar {
         children: [
           const Icon(Icons.check_circle_outline, color: AppColors.textColor,),
           const SizedBox(width: 8,),
-          Text(
-            title,
-            style: const TextStyle(
-                color: AppColors.textColor, fontSize: 16),
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(
+                  color: AppColors.textColor, fontSize: 16),
+            ),
           ),
         ],
       ),
