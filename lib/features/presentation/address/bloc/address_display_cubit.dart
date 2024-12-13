@@ -79,4 +79,8 @@ class AddressDisplayCubit extends Cubit<AddressDisplayState> {
       },
     );
   }
+
+  displayInitialState(){
+    emit(AddressDisplayInitialState());
+  }
 }

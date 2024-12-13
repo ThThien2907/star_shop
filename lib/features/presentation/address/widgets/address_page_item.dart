@@ -69,7 +69,7 @@ class AddressPageItem extends StatelessWidget {
                 SizedBox(
                   height: 50,
                   child: Text(
-                    '${userAddressEntity.detailedAddress}, ${userAddressEntity.ward}, ${userAddressEntity.district}, ${userAddressEntity.city},',
+                    '${userAddressEntity.detailedAddress}, ${userAddressEntity.ward}, ${userAddressEntity.district}, ${userAddressEntity.city}',
                     style:
                         const TextStyle(fontSize: 16, color: AppColors.subtextColor),
                     overflow: TextOverflow.ellipsis,
