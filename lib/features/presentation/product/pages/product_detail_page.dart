@@ -102,9 +102,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             }
 
             if (state is ButtonFailureState) {
-              AppSnackBar.showAppSnackBar(
+              AppSnackBar.showAppSnackBarFailure(
                   context: context,
-                  title: 'The product cannot be added to the cart!');
+                  title: state.errorCode);
             }
           },
           child: Stack(
@@ -174,7 +174,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           return Expanded(
                             child: Builder(builder: (context) {
                               return ReactiveButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   if (state == 0) {
                                     AppSnackBar.showAppSnackBar(
                                         context: context,
@@ -185,11 +185,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                       productID: product.productID,
                                       title: product.title,
                                       price: product.price,
-                                      oldPrice: product.oldPrice,
                                       totalPrice: state * product.price,
                                       images: product.images[0],
-                                      quantityInStock:
-                                      product.quantityInStock,
                                       quantity: state,
                                     );
                                     context.read<ButtonCubit>().execute(

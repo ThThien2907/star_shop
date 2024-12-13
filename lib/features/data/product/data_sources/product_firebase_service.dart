@@ -31,6 +31,18 @@ class ProductFirebaseService {
     }
   }
 
+  Future<Either> getProductsByID(String productID) async {
+    try {
+      var response = await FirebaseFirestore.instance
+          .collection('products')
+          .doc(productID)
+          .get(const GetOptions(source: Source.server));
+      return Right(response.data());
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
   Future<Either> getProductsByCategory(String categoryID) async {
     try {
       var response = await FirebaseFirestore.instance
