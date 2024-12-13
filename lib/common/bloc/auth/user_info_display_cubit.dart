@@ -42,4 +42,8 @@ class UserInfoDisplayCubit extends Cubit<UserInfoDisplayState> {
       emit(EmailNotVerified());
     }
   }
+
+  displayInitialState(){
+    emit(UserInfoInitialState());
+  }
 }

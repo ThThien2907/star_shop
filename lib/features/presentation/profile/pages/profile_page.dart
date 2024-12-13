@@ -10,19 +10,8 @@ import 'package:star_shop/features/domain/auth/entities/user_entity.dart';
 import 'package:star_shop/features/presentation/auth/pages/add_or_update_profile_page.dart';
 import 'package:star_shop/features/presentation/profile/widgets/profile_page_item.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
-
-  @override
-  State<ProfilePage> createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends State<ProfilePage> {
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
