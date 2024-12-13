@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_shop/common/widgets/button/app_button.dart';
 import 'package:star_shop/common/widgets/network_image/app_network_image.dart';
+import 'package:star_shop/common/widgets/snack_bar/app_snack_bar.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/domain/order/entities/product_ordered_entity.dart';
 import 'package:star_shop/features/presentation/cart/bloc/cart_display_cubit.dart';
@@ -163,14 +164,20 @@ class CartPageProductOrderedItem extends StatelessWidget {
                                 onPressed: () async {
                                   num totalPrice =
                                       quantity * productOrderedEntity.price;
-                                  context
+                                  var response = await context
                                       .read<CartDisplayCubit>()
                                       .updateProductQuantity(
                                         productOrderedEntity.productID,
                                         quantity,
                                         totalPrice,
                                       );
-                                  Navigator.pop(context);
+                                  if(response == true){
+                                    Navigator.pop(context);
+                                  }
+                                  else {
+                                    Navigator.pop(context);
+                                    AppSnackBar.showAppSnackBarFailure(context: context, title: 'The quantity exceeds the quantity in stock!');
+                                  }
                                 },
                                 title: 'Confirm',
                                 height: 60,

@@ -43,12 +43,14 @@ class CartDisplayCubit extends Cubit<CartDisplayState> {
     );
   }
 
-  updateProductQuantity(String productID, num quantity, num totalPrice) async {
+  Future<bool> updateProductQuantity(String productID, num quantity, num totalPrice) async {
     var response = await UpdateProductOrderedQuantityUseCase()
         .call(productID: productID, quantity: quantity, totalPrice: totalPrice);
 
-    response.fold(
-      (error) {},
+    return response.fold(
+      (error) {
+        return false;
+      },
       (data) {
         for (var e in products) {
           if (e.productID == productID) {
@@ -57,6 +59,7 @@ class CartDisplayCubit extends Cubit<CartDisplayState> {
           }
         }
         emit(CartDisplayLoaded(products: products));
+        return true;
       },
     );
   }

@@ -16,7 +16,7 @@ class CartPageSubTotal extends StatelessWidget {
             'Sub-total:',
             style: TextStyle(
               color: AppColors.textColor,
-              fontSize: 18,
+              fontSize: 16,
             ),
           ),
           const Spacer(),
@@ -24,7 +24,7 @@ class CartPageSubTotal extends StatelessWidget {
             '\$$subTotal',
             style: const TextStyle(
               color: AppColors.primaryTextColor,
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),

@@ -12,21 +12,10 @@ import 'package:star_shop/features/presentation/cart/bloc/cart_display_state.dar
 import 'package:star_shop/features/presentation/cart/widgets/cart_page_confirm_remove_product.dart';
 import 'package:star_shop/features/presentation/cart/widgets/cart_page_product_ordered_item.dart';
 import 'package:star_shop/features/presentation/cart/widgets/cart_page_sub_total.dart';
+import 'package:star_shop/features/presentation/checkout/pages/checkout_page.dart';
 
-class CartPage extends StatefulWidget {
+class CartPage extends StatelessWidget {
   const CartPage({super.key});
-
-  @override
-  State<CartPage> createState() => _CartPageState();
-}
-
-class _CartPageState extends State<CartPage> {
-
-  @override
-  void initState() {
-    super.initState();
-    context.read<CartDisplayCubit>().getProductsFromCart();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +27,7 @@ class _CartPageState extends State<CartPage> {
       body: BlocBuilder<CartDisplayCubit, CartDisplayState>(
           builder: (context, state) {
         if (state is CartDisplayInitialState) {
+          context.read<CartDisplayCubit>().getProductsFromCart();
         }
 
         if (state is CartDisplayLoading) {
@@ -123,7 +113,7 @@ class _CartPageState extends State<CartPage> {
                 ),
                 AppButton(
                   onPressed: () {
-
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => CheckoutPage(subTotal: subTotal, productsOrdered: products,)));
                   },
                   title: 'Go to checkout',
                 ),
