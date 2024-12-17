@@ -12,6 +12,7 @@ class AppTextField extends StatelessWidget {
     this.readOnly,
     this.onTap,
     this.keyboardType,
+    this.maxLines,
   });
 
   final TextEditingController controller;
@@ -19,6 +20,7 @@ class AppTextField extends StatelessWidget {
   final String hintText;
   final bool? readOnly;
   final int? maxLength;
+  final int? maxLines;
   final Icon? suffixIcon;
   final VoidCallback? onTap;
   final TextInputType? keyboardType;
@@ -49,6 +51,7 @@ class AppTextField extends StatelessWidget {
           maxLength: maxLength,
           onTap: onTap,
           keyboardType: keyboardType,
+          maxLines: maxLines ?? 1,
         ),
       ],
     );

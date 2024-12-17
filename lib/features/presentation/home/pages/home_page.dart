@@ -1,7 +1,6 @@
 // import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:star_shop/common/bloc/categories/categories_display_cubit.dart';
 import 'package:star_shop/common/bloc/products/products_display_cubit.dart';
 import 'package:star_shop/common/widgets/app_bar/app_bar_notification_icon.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
@@ -47,8 +46,6 @@ class HomePage extends StatelessWidget {
       ),
       body: MultiBlocProvider(
         providers: [
-          BlocProvider(
-              create: (context) => CategoriesDisplayCubit()..getCategories()),
           BlocProvider(
               create: (context) =>
                   ProductsDisplayCubit(useCase: GetTopSellingUseCase())

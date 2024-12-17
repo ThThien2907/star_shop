@@ -2,28 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:star_shop/common/bloc/favorite/favorite_product_state.dart';
+import 'package:star_shop/common/bloc/products/products_display_cubit.dart';
 import 'package:star_shop/common/widgets/network_image/app_network_image.dart';
 import 'package:star_shop/configs/assets/app_vectors.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
+import 'package:star_shop/features/admin/presentation/product/pages/add_or_update_product_page.dart';
 import 'package:star_shop/features/domain/product/entities/product_entity.dart';
 import 'package:star_shop/common/bloc/favorite/favorite_product_cubit.dart';
 import 'package:star_shop/features/presentation/product/pages/product_detail_page.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({super.key, required this.productEntity});
+  const ProductCard(
+      {super.key, required this.productEntity, required this.isEdit});
 
   final ProductEntity productEntity;
+  final bool isEdit;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    ProductDetailPage(productEntity: productEntity)));
-      },
+      onTap: !isEdit
+          ? () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ProductDetailPage(productEntity: productEntity)));
+            }
+          : () async {
+              final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddOrUpdateProductPage(
+                            isUpdate: true,
+                            productEntity: productEntity,
+                          )));
+              if(result == 'Data has changed') {
+                context.read<ProductsDisplayCubit>().getProducts(params: 8);
+              }
+            },
       child: Stack(
         children: [
           Column(
@@ -64,18 +81,20 @@ class ProductCard extends StatelessWidget {
               )
             ],
           ),
-          BlocBuilder<FavoriteProductCubit, FavoriteProductState>(
-            builder: (context, state) {
+          if (!isEdit)
+            BlocBuilder<FavoriteProductCubit, FavoriteProductState>(
+                builder: (context, state) {
               bool isFavorite = false;
 
-              if(state is FavoriteProductLoaded){
+              if (state is FavoriteProductLoaded) {
                 List<ProductEntity> products = state.products;
 
-                List<ProductEntity> re = products.where((e) => e.productID == productEntity.productID).toList();
-                if(re.isNotEmpty){
+                List<ProductEntity> re = products
+                    .where((e) => e.productID == productEntity.productID)
+                    .toList();
+                if (re.isNotEmpty) {
                   isFavorite = true;
-                }
-                else{
+                } else {
                   isFavorite = false;
                 }
               }
@@ -84,8 +103,7 @@ class ProductCard extends StatelessWidget {
                 right: 10,
                 child: _favoriteButton(context, isFavorite),
               );
-            }
-          ),
+            }),
         ],
       ),
     );

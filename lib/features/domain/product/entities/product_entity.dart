@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:star_shop/features/domain/product/entities/review_entity.dart';
 
 class ProductEntity{
@@ -12,6 +13,8 @@ class ProductEntity{
   final num salesNumber;
   final num rating;
   final List<ReviewEntity> reviews;
+  final Timestamp createdAt;
+  final Timestamp updatedAt;
 
   ProductEntity({
     required this.productID,
@@ -25,6 +28,8 @@ class ProductEntity{
     required this.salesNumber,
     required this.rating,
     required this.reviews,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   @override

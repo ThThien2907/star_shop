@@ -35,7 +35,7 @@ class _ViewAllProductsPageState extends State<ViewAllProductsPage> {
               create: (context) =>
                   ProductsDisplayCubit(useCase: GetProductsUseCase())
                     ..getProducts(params: limit)),
-          BlocProvider(create: (context) => LoadMoreProductsCubit()),
+          BlocProvider(create: (context) => LoadMoreProductsCubit(useCase: GetProductsUseCase())),
         ],
         child: BlocBuilder<ProductsDisplayCubit, ProductsDisplayState>(
           builder: (context, state) {
@@ -82,6 +82,7 @@ class _ViewAllProductsPageState extends State<ViewAllProductsPage> {
                             products: products,
                             itemCount: products.length,
                             physics: const NeverScrollableScrollPhysics(),
+                            isEdit: false,
                           ),
                           const SizedBox(
                             height: 16,

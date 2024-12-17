@@ -29,7 +29,7 @@ class HomePageTopSelling extends StatelessWidget {
             const Spacer(),
             TextButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ViewAllProductsPage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ViewAllProductsPage()));
               },
               child: const Text(
                 'View All Products',
@@ -73,6 +73,7 @@ class HomePageTopSelling extends StatelessWidget {
                 products: products,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: products.length,
+                isEdit: false,
               );
             }
 

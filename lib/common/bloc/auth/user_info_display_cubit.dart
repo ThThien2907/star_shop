@@ -30,11 +30,11 @@ class UserInfoDisplayCubit extends Cubit<UserInfoDisplayState> {
           }
           else {
             userEntity = data;
-            // if (userEntity.role == 'AD') {
-            //   emit(IsAdmin(userEntity: userEntity));
-            // }else{
+            if (userEntity.role == 'AD') {
+              emit(IsAdmin(userEntity: userEntity));
+            }else{
               emit(UserInfoLoaded(userEntity: userEntity));
-            // }
+            }
           }
         },
       );

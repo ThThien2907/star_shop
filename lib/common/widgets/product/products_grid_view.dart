@@ -8,13 +8,14 @@ class ProductsGridView extends StatelessWidget {
     required this.products,
     this.physics,
     required this.itemCount,
-    this.scrollController,
+    this.scrollController, required this.isEdit,
   });
 
   final List<ProductEntity> products;
   final ScrollPhysics? physics;
   final ScrollController? scrollController;
   final int itemCount;
+  final bool isEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class ProductsGridView extends StatelessWidget {
         childAspectRatio: 0.5,
       ),
       itemBuilder: (context, index) {
-        return ProductCard(productEntity: products[index]);
+        return ProductCard(productEntity: products[index], isEdit: isEdit,);
       },
     );
   }

@@ -8,6 +8,21 @@ class ProductFirebaseService {
     try {
       var response = await FirebaseFirestore.instance
           .collection('products')
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get(const GetOptions(source: Source.server));
+      var data = response.docs.map((e) => e.data()).toList();
+      return Right(data);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either> getProductsByUpdatedAt(int limit) async {
+    try {
+      var response = await FirebaseFirestore.instance
+          .collection('products')
+          .orderBy('updatedAt', descending: true)
           .limit(limit)
           .get(const GetOptions(source: Source.server));
       var data = response.docs.map((e) => e.data()).toList();
@@ -60,8 +75,9 @@ class ProductFirebaseService {
     try {
       var response = await FirebaseFirestore.instance
           .collection('products')
-          .where('title', isEqualTo: name)
-          .get(const GetOptions(source: Source.server));
+          .orderBy('title')
+          .startAt([name]).endAt(['$name\uf8ff']).get(
+              const GetOptions(source: Source.server));
       var data = response.docs.map((e) => e.data()).toList();
       return Right(data);
     } catch (e) {
@@ -104,6 +120,39 @@ class ProductFirebaseService {
             .set(productModel.toMap());
         return const Right(true);
       }
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either> addNewProduct(ProductModel productModel) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('products')
+          .doc(productModel.productID)
+          .set(productModel.toMap());
+      return (const Right('Add new product successful'));
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either> updateProduct(ProductModel productModel) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('products')
+          .doc(productModel.productID)
+          .update({
+        'title': productModel.title,
+        'description': productModel.description,
+        'categoryID': productModel.categoryID,
+        'images': productModel.images.map((e) => e.toString()).toList(),
+        'price': productModel.price,
+        'oldPrice': productModel.oldPrice,
+        'quantityInStock': productModel.quantityInStock,
+        'updatedAt': productModel.updatedAt,
+      });
+      return (const Right('Update product successful'));
     } catch (e) {
       return Left(e.toString());
     }

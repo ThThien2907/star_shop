@@ -49,7 +49,7 @@ class FavoritePage extends StatelessWidget {
             } else {
               return Padding(
                 padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                child: ProductsGridView(products: products, itemCount: products.length,),
+                child: ProductsGridView(products: products, itemCount: products.length, isEdit: false,),
               );
             }
           }

@@ -112,6 +112,11 @@ class HomePageCategories extends StatelessWidget {
                 context.read<CategoriesDisplayCubit>().getCategories();
               });
             }
+
+            if (state is CategoriesInitialState) {
+              context.read<CategoriesDisplayCubit>().getCategories();
+            }
+
             return Container();
           },
           // child: ,

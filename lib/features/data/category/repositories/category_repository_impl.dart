@@ -29,4 +29,24 @@ class CategoryRepositoryImpl implements CategoryRepository {
       title: model.title,
     );
   }
+
+  CategoryModel categoryToModel(CategoryEntity entity) {
+    return CategoryModel(
+      categoryID: entity.categoryID,
+      image: entity.image,
+      title: entity.title,
+    );
+  }
+
+  @override
+  Future<Either> addNewCategory(CategoryEntity categoryEntity) async {
+    var categoryModel = categoryToModel(categoryEntity);
+    return sl<CategoryFirebaseService>().addNewCategory(categoryModel);
+  }
+
+  @override
+  Future<Either> updateCategory(CategoryEntity categoryEntity) async {
+    var categoryModel = categoryToModel(categoryEntity);
+    return sl<CategoryFirebaseService>().updateCategory(categoryModel);
+  }
 }

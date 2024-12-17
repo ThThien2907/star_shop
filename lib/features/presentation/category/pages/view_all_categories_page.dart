@@ -19,80 +19,81 @@ class ViewAllCategoriesPage extends StatelessWidget {
         title: 'All Categories',
         centerTitle: true,
       ),
-      body: BlocProvider(
-        create: (context) => CategoriesDisplayCubit()..getCategories(),
-        child: BlocBuilder<CategoriesDisplayCubit, CategoriesDisplayState>(
-          builder: (context, state) {
-            if (state is CategoriesLoading) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.primaryColor,
-                ),
-              );
-            }
+      body: BlocBuilder<CategoriesDisplayCubit, CategoriesDisplayState>(
+        builder: (context, state) {
+          if (state is CategoriesInitialState) {
+            context.read<CategoriesDisplayCubit>().getCategories();
+          }
 
-            if (state is CategoriesLoadFailure) {
-              return Center(
-                child: AppErrorWidget(onPress: (){
-                  context.read<CategoriesDisplayCubit>().getCategories();
-                },)
-              );
-            }
+          if (state is CategoriesLoading) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.primaryColor,
+              ),
+            );
+          }
 
-            if (state is CategoriesLoaded) {
-              List<CategoryEntity> categories = state.categories;
+          if (state is CategoriesLoadFailure) {
+            return Center(
+              child: AppErrorWidget(onPress: (){
+                context.read<CategoriesDisplayCubit>().getCategories();
+              },)
+            );
+          }
 
-              return ListView.separated(
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      child: InkWell(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ProductsByCategoryPage(category: categories[index],)));
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          height: 80,
-                          child: Row(
-                            children: [
-                              AppNetworkImage(
-                                width: 60,
-                                height: 60,
-                                image: categories[index].image,
-                                radius: 10,
-                              ),
-                              const SizedBox(
-                                width: 24,
-                              ),
-                              Text(
-                                categories[index].title,
-                                style: const TextStyle(
-                                    fontSize: 20,
-                                    color: AppColors.textColor,
-                                    fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          ),
+          if (state is CategoriesLoaded) {
+            List<CategoryEntity> categories = state.categories;
+
+            return ListView.separated(
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 8),
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProductsByCategoryPage(category: categories[index],)));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        height: 80,
+                        child: Row(
+                          children: [
+                            AppNetworkImage(
+                              width: 60,
+                              height: 60,
+                              image: categories[index].image,
+                              radius: 10,
+                            ),
+                            const SizedBox(
+                              width: 24,
+                            ),
+                            Text(
+                              categories[index].title,
+                              style: const TextStyle(
+                                  fontSize: 20,
+                                  color: AppColors.textColor,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
                         ),
                       ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return const Divider(
-                      height: 1,
-                      color: AppColors.grey,
-                      indent: 16,
-                      endIndent: 16,
-                      thickness: 1.5,
-                    );
-                  },
-                  itemCount: categories.length);
-            }
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return const Divider(
+                    height: 1,
+                    color: AppColors.grey,
+                    indent: 16,
+                    endIndent: 16,
+                    thickness: 1.5,
+                  );
+                },
+                itemCount: categories.length);
+          }
 
-            return Container();
-          },
-        ),
+          return Container();
+        },
       ),
     );
   }

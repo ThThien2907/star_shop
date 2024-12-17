@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:star_shop/features/data/product/models/review_model.dart';
 
 class ProductModel{
@@ -12,6 +13,9 @@ class ProductModel{
   final num salesNumber;
   final num rating;
   final List<ReviewModel> reviews;
+  final Timestamp createdAt;
+  final Timestamp updatedAt;
+
 
   ProductModel({
     required this.productID,
@@ -25,6 +29,8 @@ class ProductModel{
     required this.salesNumber,
     required this.rating,
     required this.reviews,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   Map<String, dynamic> toMap() {
@@ -40,6 +46,8 @@ class ProductModel{
       'salesNumber': salesNumber,
       'rating': rating,
       'reviews': reviews.map((map) => map.toMap()).toList(),
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 
@@ -56,6 +64,8 @@ class ProductModel{
       salesNumber: map['salesNumber'],
       rating: map['rating'],
       reviews: List<ReviewModel>.from(map['reviews'].map((e) => ReviewModel.fromMap(e)).toList()),
+      createdAt: map['createdAt'],
+      updatedAt: map['updatedAt'],
     );
   }
 }

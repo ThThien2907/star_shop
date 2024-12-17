@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_shop/common/bloc/auth/user_info_display_cubit.dart';
+import 'package:star_shop/common/bloc/categories/categories_display_cubit.dart';
 import 'package:star_shop/common/bloc/favorite/favorite_product_cubit.dart';
 import 'package:star_shop/common/widgets/app_bar/basic_app_bar.dart';
 import 'package:star_shop/common/widgets/bottom_nav/app_bottom_nav.dart';
@@ -36,6 +37,7 @@ class _SignInPageState extends State<SignInPage> {
     context.read<FavoriteProductCubit>().displayInitialState();
     context.read<UserInfoDisplayCubit>().displayInitialState();
     context.read<AddressDisplayCubit>().displayInitialState();
+    context.read<CategoriesDisplayCubit>().displayInitialState();
   }
 
   @override

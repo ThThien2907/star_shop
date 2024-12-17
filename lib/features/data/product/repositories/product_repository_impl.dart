@@ -21,6 +21,8 @@ class ProductRepositoryImpl implements ProductRepository {
       salesNumber: model.salesNumber,
       rating: model.rating,
       reviews: model.reviews.map((e) => reviewToEntity(e)).toList(),
+      createdAt: model.createdAt,
+      updatedAt: model.updatedAt,
     );
   }
 
@@ -37,6 +39,8 @@ class ProductRepositoryImpl implements ProductRepository {
       salesNumber: entity.salesNumber,
       rating: entity.rating,
       reviews: entity.reviews.map((e) => reviewToModel(e)).toList(),
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
     );
   }
 
@@ -92,9 +96,19 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Either> getProductsByName(String name) {
-    // TODO: implement getProductsByName
-    throw UnimplementedError();
+  Future<Either> getProductsByName(String name) async {
+    var response = await sl<ProductFirebaseService>().getProductsByName(name);
+
+    return response.fold(
+          (error) {
+        return Left(error);
+      },
+          (data) {
+        List<ProductEntity> products = List<ProductEntity>.from(
+            data.map((e) => productToEntity(ProductModel.fromMap(e)))).toList();
+        return Right(products);
+      },
+    );
   }
 
   @override
@@ -149,5 +163,35 @@ class ProductRepositoryImpl implements ProductRepository {
         return Right(products);
       },
     );
+  }
+
+  @override
+  Future<Either> getProductsByUpdatedAt(int limit) async {
+    var response = await sl<ProductFirebaseService>().getProductsByUpdatedAt(limit);
+
+    return response.fold(
+          (error) {
+        return Left(error);
+      },
+          (data) {
+        List<ProductEntity> products = List<ProductEntity>.from(
+            data.map((e) => productToEntity(ProductModel.fromMap(e)))).toList();
+        return Right(products);
+      },
+    );
+  }
+
+  @override
+  Future<Either> addNewProduct(ProductEntity productEntity) async {
+    var productModel = productToModel(productEntity);
+
+    return await sl<ProductFirebaseService>().addNewProduct(productModel);
+  }
+
+  @override
+  Future<Either> updateProduct(ProductEntity productEntity) async {
+    var productModel = productToModel(productEntity);
+
+    return await sl<ProductFirebaseService>().updateProduct(productModel);
   }
 }

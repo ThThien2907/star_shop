@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
+import 'package:star_shop/features/presentation/search/pages/product_search_page.dart';
 
 class HomePageSearchBar extends StatelessWidget {
   const HomePageSearchBar({super.key});
@@ -8,6 +9,7 @@ class HomePageSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const ProductSearchPage(isEdit: false)));
       },
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.all(8),
