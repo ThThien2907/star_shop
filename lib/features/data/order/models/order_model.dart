@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:star_shop/features/data/order/models/product_ordered_model.dart';
 
 class OrderModel {
@@ -13,6 +14,7 @@ class OrderModel {
   final String city;
   final String cityCode;
   final String districtCode;
+  final Timestamp createdAt;
 
   OrderModel({
     required this.orderID,
@@ -27,6 +29,7 @@ class OrderModel {
     required this.city,
     required this.cityCode,
     required this.districtCode,
+    required this.createdAt,
   });
 
   Map<String, dynamic> toMap() {
@@ -43,6 +46,7 @@ class OrderModel {
       'city': city,
       'cityCode': cityCode,
       'districtCode': districtCode,
+      'createdAt': createdAt,
     };
   }
 
@@ -63,6 +67,7 @@ class OrderModel {
       city: map['city'],
       cityCode: map['cityCode'],
       districtCode: map['districtCode'],
+      createdAt: map['createdAt'],
     );
   }
 }

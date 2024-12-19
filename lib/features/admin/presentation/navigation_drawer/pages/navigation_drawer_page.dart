@@ -14,9 +14,10 @@ import 'package:star_shop/features/domain/auth/entities/user_entity.dart';
 import 'package:star_shop/features/presentation/auth/pages/sign_in_page.dart';
 
 class NavigationDrawerPage extends StatefulWidget {
-  const NavigationDrawerPage({super.key, required this.userEntity});
+  const NavigationDrawerPage({super.key, required this.userEntity, required this.activePage});
 
   final UserEntity userEntity;
+  final int activePage;
 
   @override
   State<NavigationDrawerPage> createState() => _NavigationDrawerPageState();
@@ -26,6 +27,12 @@ class _NavigationDrawerPageState extends State<NavigationDrawerPage> {
   List<Widget> listPage = [const DashboardPage(),const ProductPage(), const CategoryPage(), const OrderPage()];
   List<String> appBarTitle = ['Dashboard', 'Product', 'Category', 'Order'];
   int activePage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    activePage = widget.activePage;
+  }
 
   @override
   Widget build(BuildContext context) {

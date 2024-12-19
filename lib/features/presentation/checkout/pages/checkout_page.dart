@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -87,6 +88,7 @@ class CheckoutPage extends StatelessWidget {
                         city: userAddress.city!,
                         cityCode: userAddress.cityCode!,
                         districtCode: userAddress.districtCode!,
+                        createdAt: Timestamp.fromDate(DateTime.now()),
                       );
 
                       context.read<ButtonCubit>().execute(useCase: PlaceOrderUseCase(), params: orderEntity);

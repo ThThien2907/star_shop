@@ -47,7 +47,7 @@ class OrderPage extends StatelessWidget {
           body: BlocBuilder<OrderDisplayCubit, OrderDisplayState>(
               builder: (context, state) {
             if (state is OrderDisplayInitialState) {
-              context.read<OrderDisplayCubit>().getOrder();
+              context.read<OrderDisplayCubit>().getOrder(false);
             }
 
             if (state is OrderDisplayLoading) {
@@ -62,7 +62,7 @@ class OrderPage extends StatelessWidget {
               return Center(
                 child: AppErrorWidget(
                   onPress: () {
-                    context.read<OrderDisplayCubit>().getOrder();
+                    context.read<OrderDisplayCubit>().getOrder(false);
                   },
                 ),
               );
@@ -77,10 +77,10 @@ class OrderPage extends StatelessWidget {
 
               return TabBarView(
                 children: [
-                  OrderPageListView(listOrder: listPending, colorStatus: AppColors.primaryColor, status: 'Pending',),
-                  OrderPageListView(listOrder: listOngoing, colorStatus: AppColors.primaryColor, status: 'Ongoing',),
-                  OrderPageListView(listOrder: listComplete, colorStatus: AppColors.successColor, status: 'Complete',),
-                  OrderPageListView(listOrder: listCanceled, colorStatus: AppColors.red, status: 'Canceled',),
+                  OrderPageListView(listOrder: listPending, isAdmin: false,),
+                  OrderPageListView(listOrder: listOngoing, isAdmin: false,),
+                  OrderPageListView(listOrder: listComplete, isAdmin: false,),
+                  OrderPageListView(listOrder: listCanceled, isAdmin: false,),
                 ],
               );
             }

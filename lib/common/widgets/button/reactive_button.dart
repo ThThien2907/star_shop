@@ -10,6 +10,7 @@ class ReactiveButton extends StatelessWidget {
   final Widget? widget;
   final double? width;
   final double? height;
+  final Color? color;
 
   const ReactiveButton({
     super.key,
@@ -18,6 +19,7 @@ class ReactiveButton extends StatelessWidget {
     this.widget,
     this.width,
     this.height,
+    this.color,
   });
 
   @override
@@ -40,7 +42,7 @@ class ReactiveButton extends StatelessWidget {
           width ?? MediaQuery.of(context).size.width,
           height ?? 60,
         ),
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: color ?? AppColors.primaryColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),

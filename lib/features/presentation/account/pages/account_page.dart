@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:star_shop/common/widgets/app_bar/app_bar_notification_icon.dart';
 import 'package:star_shop/common/widgets/bottom_sheet/app_bottom_sheet.dart';
 import 'package:star_shop/common/widgets/bottom_sheet/confirm_event_bottom_sheet.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
@@ -17,10 +16,6 @@ class AccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarNotificationIcon(
-        title: 'Account',
-        centerTitle: true,
-      ),
       body: SingleChildScrollView(
         child: Column(
           children: [

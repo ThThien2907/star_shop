@@ -76,6 +76,7 @@ class OrderRepositoryImpl implements OrderRepository {
       city: entity.city,
       cityCode: entity.cityCode,
       districtCode: entity.districtCode,
+      createdAt: entity.createdAt,
     );
   }
 
@@ -95,6 +96,7 @@ class OrderRepositoryImpl implements OrderRepository {
       city: model.city,
       cityCode: model.cityCode,
       districtCode: model.districtCode,
+      createdAt: model.createdAt,
     );
   }
 
@@ -112,8 +114,8 @@ class OrderRepositoryImpl implements OrderRepository {
   }
 
   @override
-  Future<Either> getOrderByUid() async {
-    var response = await sl<OrderFirebaseService>().getOrderByUid();
+  Future<Either> getOrder(bool isGetAll) async {
+    var response = await sl<OrderFirebaseService>().getOrder(isGetAll);
 
     return response.fold(
       (error) {
@@ -124,5 +126,26 @@ class OrderRepositoryImpl implements OrderRepository {
         return Right(listOrder);
       },
     );
+  }
+
+  @override
+  Future<Either> cancelOrder(OrderEntity orderEntity) async {
+    var orderModel = orderToModel(orderEntity);
+
+    return await sl<OrderFirebaseService>().cancelOrder(orderModel);
+  }
+
+  @override
+  Future<Either> completeOrder(OrderEntity orderEntity) async {
+    var orderModel = orderToModel(orderEntity);
+
+    return await sl<OrderFirebaseService>().completeOrder(orderModel);
+  }
+
+  @override
+  Future<Either> confirmOrder(OrderEntity orderEntity) async {
+    var orderModel = orderToModel(orderEntity);
+
+    return await sl<OrderFirebaseService>().confirmOrder(orderModel);
   }
 }

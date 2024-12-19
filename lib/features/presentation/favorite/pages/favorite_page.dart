@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_shop/common/bloc/favorite/favorite_product_state.dart';
-import 'package:star_shop/common/widgets/app_bar/app_bar_notification_icon.dart';
 import 'package:star_shop/common/widgets/error/app_error_widget.dart';
 import 'package:star_shop/common/widgets/product/products_grid_view.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
@@ -14,10 +13,6 @@ class FavoritePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarNotificationIcon(
-        title: 'Favorites',
-        centerTitle: true,
-      ),
       body: BlocBuilder<FavoriteProductCubit, FavoriteProductState>(
         builder: (context, state) {
           if (state is FavoriteProductInitialState) {

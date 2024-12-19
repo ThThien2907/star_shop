@@ -9,5 +9,9 @@ abstract class OrderRepository{
   Future<Either> updateProductOrderedQuantity(String productID, num quantity, num totalPrice);
 
   Future<Either> placeOrder(OrderEntity orderEntity);
-  Future<Either> getOrderByUid();
+  Future<Either> getOrder(bool isGetAll);
+
+  Future<Either> cancelOrder(OrderEntity orderEntity);
+  Future<Either> confirmOrder(OrderEntity orderEntity);
+  Future<Either> completeOrder(OrderEntity orderEntity);
 }

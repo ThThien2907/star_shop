@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_shop/common/bloc/auth/user_info_display_cubit.dart';
 import 'package:star_shop/common/bloc/auth/user_info_display_state.dart';
+import 'package:star_shop/common/widgets/app_bar/app_bar_notification_icon.dart';
 import 'package:star_shop/common/widgets/error/app_error_widget.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/admin/presentation/navigation_drawer/pages/navigation_drawer_page.dart';
@@ -13,6 +14,8 @@ import 'package:star_shop/features/presentation/auth/pages/verify_email_page.dar
 import 'package:star_shop/features/presentation/cart/pages/cart_page.dart';
 import 'package:star_shop/features/presentation/favorite/pages/favorite_page.dart';
 import 'package:star_shop/features/presentation/home/pages/home_page.dart';
+import 'package:star_shop/features/presentation/notification/bloc/notification_display_cubit.dart';
+import 'package:star_shop/features/presentation/notification/bloc/notification_display_state.dart';
 
 class AppBottomNav extends StatefulWidget {
   const AppBottomNav({
@@ -41,6 +44,12 @@ class _AppBottomNavState extends State<AppBottomNav> {
   void initState() {
     super.initState();
     context.read<UserInfoDisplayCubit>().getUser();
+  }
+
+  @override
+  void didChangeDependencies() {
+    context.read<NotificationDisplayCubit>().stopListening();
+    super.didChangeDependencies();
   }
 
   @override
@@ -81,11 +90,69 @@ class _AppBottomNavState extends State<AppBottomNav> {
         }
 
         if (state is IsAdmin) {
-          return NavigationDrawerPage(userEntity: state.userEntity,);
+          if(context.read<NotificationDisplayCubit>().state is NotificationDisplayInitialState){
+            context.read<NotificationDisplayCubit>().listenToCollection('admin');
+
+          }
+          return NavigationDrawerPage(userEntity: state.userEntity, activePage: 0,);
         }
 
         if (state is UserInfoLoaded) {
           UserEntity userEntity = state.userEntity;
+          if(context.read<NotificationDisplayCubit>().state is NotificationDisplayInitialState){
+            context.read<NotificationDisplayCubit>().listenToCollection(userEntity.userId);
+          }
+
+          List<Widget> listAppBarTitle = [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Hello',
+                  style: TextStyle(
+                    color: AppColors.subtextColor,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  userEntity.fullName,
+                  style: const TextStyle(
+                    color: AppColors.textColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const Text(
+              'Favorites',
+              style: TextStyle(
+                color: AppColors.textColor,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Text(
+              'My Cart',
+              style: TextStyle(
+                color: AppColors.textColor,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Text(
+              'Account',
+              style: TextStyle(
+                color: AppColors.textColor,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ];
+
           List<Widget> listPage = [
             HomePage(userEntity: userEntity),
             const FavoritePage(),
@@ -93,7 +160,11 @@ class _AppBottomNavState extends State<AppBottomNav> {
             const AccountPage()
           ];
           return Scaffold(
-            extendBody: true,
+            // extendBody: true,
+            appBar: AppBarNotificationIcon(
+              widget: listAppBarTitle[activePage],
+              centerTitle: activePage == 0 ? false : true,
+            ),
             body: IndexedStack(
               index: activePage,
               children: listPage,

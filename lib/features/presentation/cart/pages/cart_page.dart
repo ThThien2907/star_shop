@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:star_shop/common/widgets/app_bar/app_bar_notification_icon.dart';
 import 'package:star_shop/common/widgets/bottom_sheet/app_bottom_sheet.dart';
 import 'package:star_shop/common/widgets/button/app_button.dart';
 import 'package:star_shop/common/widgets/error/app_error_widget.dart';
@@ -20,10 +19,6 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarNotificationIcon(
-        title: 'My Cart',
-        centerTitle: true,
-      ),
       body: BlocBuilder<CartDisplayCubit, CartDisplayState>(
           builder: (context, state) {
         if (state is CartDisplayInitialState) {

@@ -2,15 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:star_shop/common/widgets/network_image/app_network_image.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
-import 'package:star_shop/features/domain/order/entities/product_ordered_entity.dart';
+import 'package:star_shop/features/domain/order/entities/order_entity.dart';
 
 class OrderPageItem extends StatelessWidget {
-  const OrderPageItem({super.key, required this.productOrderedEntity, required this.status, required this.totalPrice, required this.colorStatus});
+  const OrderPageItem({super.key, required this.orderEntity,});
 
-  final ProductOrderedEntity productOrderedEntity;
-  final String status;
-  final num totalPrice;
-  final Color colorStatus;
+  final OrderEntity orderEntity;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +16,7 @@ class OrderPageItem extends StatelessWidget {
         AppNetworkImage(
           width: 80,
           height: 80,
-          image: productOrderedEntity.images,
+          image: orderEntity.productsOrdered[0].images,
           radius: 10,
         ),
         Expanded(
@@ -31,6 +28,8 @@ class OrderPageItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  _productOrderedID(context),
+
                   _productOrderedTitle(
                     context,
                   ),
@@ -53,13 +52,23 @@ class OrderPageItem extends StatelessWidget {
   }
 
   Widget _orderStatus(BuildContext context) {
-    return Text(status,
-      style: TextStyle(color: colorStatus, fontSize: 16),);
+    // Color colorStatus = ;
+    return Text(orderEntity.status,
+      style: TextStyle(color: setStatusColor(orderEntity.status), fontSize: 16),);
   }
 
   Widget _productOrderedTitle(BuildContext context) {
     return Text(
-      productOrderedEntity.title,
+      orderEntity.productsOrdered[0].title,
+      style: const TextStyle(color: AppColors.primaryTextColor, fontSize: 16),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  Widget _productOrderedID(BuildContext context) {
+    return Text(
+      'OrderID: ${orderEntity.orderID}',
       style: const TextStyle(color: AppColors.primaryTextColor, fontSize: 16),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
@@ -68,8 +77,23 @@ class OrderPageItem extends StatelessWidget {
 
   Widget _productOrderedPrice(BuildContext context) {
     return Text(
-      '\$$totalPrice',
+      '\$${orderEntity.totalPrice}',
       style: const TextStyle(color: AppColors.textColor, fontSize: 16),
     );
+  }
+
+  Color setStatusColor(String status){
+    if(status == 'Pending'){
+      return AppColors.primaryColor;
+    }
+    else if(status == 'Ongoing'){
+      return AppColors.primaryColor;
+    }
+    else if(status == 'Complete'){
+      return AppColors.successColor;
+    }
+    else {
+      return AppColors.red;
+    }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_shop/features/domain/order/entities/order_entity.dart';
-import 'package:star_shop/features/domain/order/use_cases/get_order_by_uid_use_case.dart';
+import 'package:star_shop/features/domain/order/use_cases/get_order_use_case.dart';
 import 'package:star_shop/features/presentation/order/bloc/order_display_state.dart';
 
 class OrderDisplayCubit extends Cubit<OrderDisplayState> {
@@ -11,9 +11,9 @@ class OrderDisplayCubit extends Cubit<OrderDisplayState> {
   List<OrderEntity> listComplete = [];
   List<OrderEntity> listCanceled = [];
 
-  getOrder() async {
+  getOrder(bool isGetAll) async {
     emit(OrderDisplayLoading());
-    var response = await GetOrderByUidUseCase().call();
+    var response = await GetOrderUseCase().call(params: isGetAll);
 
     response.fold(
       (error) {

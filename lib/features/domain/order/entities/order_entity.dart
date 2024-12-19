@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:star_shop/features/domain/order/entities/product_ordered_entity.dart';
 
 class OrderEntity {
@@ -13,6 +14,7 @@ class OrderEntity {
   final String city;
   final String cityCode;
   final String districtCode;
+  final Timestamp createdAt;
 
   OrderEntity({
     required this.orderID,
@@ -27,5 +29,6 @@ class OrderEntity {
     required this.city,
     required this.cityCode,
     required this.districtCode,
+    required this.createdAt,
   });
 }

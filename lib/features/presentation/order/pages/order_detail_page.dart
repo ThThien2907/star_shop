@@ -1,29 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:star_shop/common/bloc/button/button_cubit.dart';
+import 'package:star_shop/common/bloc/button/button_state.dart';
 import 'package:star_shop/common/widgets/app_bar/basic_app_bar.dart';
+import 'package:star_shop/common/widgets/button/reactive_button.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/domain/order/entities/order_entity.dart';
+import 'package:star_shop/features/domain/order/use_cases/cancel_order_use_case.dart';
+import 'package:star_shop/features/domain/order/use_cases/complete_order_use_case.dart';
+import 'package:star_shop/features/domain/order/use_cases/confirm_order_use_case.dart';
 import 'package:star_shop/features/presentation/order/widgets/order_detail_page_product_ordered_item.dart';
 
 class OrderDetailPage extends StatelessWidget {
-  const OrderDetailPage({super.key, required this.orderEntity});
+  const OrderDetailPage(
+      {super.key, required this.orderEntity, required this.isAdmin});
 
   final OrderEntity orderEntity;
+  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
     String statusText = '';
     Color statusColor = AppColors.primaryColor;
-    if(orderEntity.status == 'Pending'){
+    if (orderEntity.status == 'Pending') {
       statusText = 'Order is pending!';
     }
-    if(orderEntity.status == 'Ongoing'){
+    if (orderEntity.status == 'Ongoing') {
       statusText = 'Order is being delivered';
     }
-    if(orderEntity.status == 'Complete'){
+    if (orderEntity.status == 'Complete') {
       statusText = 'The order has been delivered successfully';
       statusColor = AppColors.successColor;
     }
-    if(orderEntity.status == 'Canceled'){
+    if (orderEntity.status == 'Canceled') {
       statusText = 'The order has been canceled';
       statusColor = AppColors.removeColor;
     }
@@ -39,13 +48,18 @@ class OrderDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: const EdgeInsets.only(left: 16, top: 4, bottom: 4, right: 16),
+              padding:
+                  const EdgeInsets.only(left: 16, top: 4, bottom: 4, right: 16),
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: statusColor,
               ),
-              child: Text(statusText, style: const TextStyle(fontSize: 16, color: AppColors.textColor),),
+              child: Text(
+                statusText,
+                style:
+                    const TextStyle(fontSize: 16, color: AppColors.textColor),
+              ),
             ),
             const SizedBox(
               height: 16,
@@ -104,10 +118,73 @@ class OrderDetailPage extends StatelessWidget {
               children: [
                 Text(
                   'Total Price: \$${orderEntity.totalPrice}',
-                  style: const TextStyle(fontSize: 16, color: AppColors.textColor),
+                  style:
+                      const TextStyle(fontSize: 16, color: AppColors.textColor),
                 )
               ],
-            )
+            ),
+            const SizedBox(
+              height: 32,
+            ),
+            if (isAdmin)
+              if(orderEntity.status == 'Pending' || orderEntity.status == 'Ongoing')
+              Row(
+                children: [
+                  Flexible(
+                    child: BlocProvider(
+                      create: (context) => ButtonCubit(),
+                      child: BlocListener<ButtonCubit, ButtonState>(
+                        listener: (context, state) {
+                          if(state is ButtonSuccessState){
+                            Navigator.pop(context, 'Data has changed');
+                          }
+                        },
+                        child: Builder(
+                          builder: (context) {
+                            return ReactiveButton(
+                              onPressed: () {
+                                context.read<ButtonCubit>().execute(useCase: CancelOrderUseCase(), params: orderEntity);
+                              },
+                              title: 'Cancel Order',
+                              color: AppColors.cancelColor,
+                            );
+                          }
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Flexible(
+                    child: BlocProvider(
+                      create: (context) => ButtonCubit(),
+                      child: BlocListener<ButtonCubit, ButtonState>(
+                        listener: (context, state) {
+                          if(state is ButtonSuccessState){
+                            Navigator.pop(context, 'Data has changed');
+                          }
+                        },
+                        child: Builder(
+                          builder: (context) {
+                            return ReactiveButton(
+                              onPressed: () {
+                                if(orderEntity.status == 'Pending') {
+                                  context.read<ButtonCubit>().execute(useCase: ConfirmOrderUseCase(), params: orderEntity);
+                                }
+                                else {
+                                  context.read<ButtonCubit>().execute(useCase: CompleteOrderUseCase(), params: orderEntity);
+                                }
+                              },
+                              title: orderEntity.status == 'Pending' ? 'Confirm order' : 'Complete order',
+                            );
+                          }
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
           ],
         ),
       ),

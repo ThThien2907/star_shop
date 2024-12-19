@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/domain/order/entities/order_entity.dart';
+import 'package:star_shop/features/presentation/order/bloc/order_display_cubit.dart';
 import 'package:star_shop/features/presentation/order/pages/order_detail_page.dart';
 import 'package:star_shop/features/presentation/order/widgets/order_page_item.dart';
 
 class OrderPageListView extends StatelessWidget {
   const OrderPageListView(
-      {super.key, required this.listOrder, required this.status, required this.colorStatus,});
+      {super.key, required this.listOrder, required this.isAdmin,});
 
   final List<OrderEntity> listOrder;
-  final String status;
-  final Color colorStatus;
+  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +20,13 @@ class OrderPageListView extends StatelessWidget {
       child: listOrder.isNotEmpty ? ListView.separated(
         itemBuilder: (context, index) {
           return InkWell(
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetailPage(orderEntity: listOrder[index])));
+            onTap: () async {
+              var result = await Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetailPage(orderEntity: listOrder[index], isAdmin: isAdmin)));
+              if(result == 'Data has changed'){
+                context.read<OrderDisplayCubit>().getOrder(isAdmin);
+              }
             },
-            child: OrderPageItem(
-              productOrderedEntity: listOrder[index].productsOrdered[0],
-              status: status,
-              totalPrice: listOrder[index].totalPrice,
-              colorStatus: colorStatus,
-            ),
+            child: OrderPageItem(orderEntity: listOrder[index],),
           );
         },
         separatorBuilder: (context, index) {
@@ -41,32 +40,32 @@ class OrderPageListView extends StatelessWidget {
   }
 
   Widget _emptyOrder(BuildContext context){
-    return Center(
+    return const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Icon(
+          Icon(
             Icons.list_alt,
             color: AppColors.subtextColor,
             size: 92,
           ),
-          const SizedBox(
+          SizedBox(
             height: 16,
           ),
           Text(
-            'No $status Orders!',
-            style: const TextStyle(
+            'No Orders!',
+            style: TextStyle(
               color: AppColors.textColor,
               fontSize: 16,
             ),
           ),
-          const SizedBox(
+          SizedBox(
             height: 16,
           ),
           Text(
-            'You don’t have any $status orders at this time.',
-            style: const TextStyle(
+            'You don’t have any orders at this time.',
+            style: TextStyle(
               color: AppColors.subtextColor,
               fontSize: 16,
             ),
