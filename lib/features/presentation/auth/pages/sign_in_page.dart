@@ -18,6 +18,7 @@ import 'package:star_shop/common/bloc/button/button_cubit.dart';
 import 'package:star_shop/common/bloc/button/button_state.dart';
 import 'package:star_shop/common/widgets/button/reactive_button.dart';
 import 'package:star_shop/features/presentation/cart/bloc/cart_display_cubit.dart';
+import 'package:star_shop/features/presentation/order/bloc/order_display_cubit.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -38,6 +39,7 @@ class _SignInPageState extends State<SignInPage> {
     context.read<UserInfoDisplayCubit>().displayInitialState();
     context.read<AddressDisplayCubit>().displayInitialState();
     context.read<CategoriesDisplayCubit>().displayInitialState();
+    context.read<OrderDisplayCubit>().displayInitialState();
   }
 
   @override

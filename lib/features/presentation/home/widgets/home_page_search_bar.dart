@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:star_shop/configs/theme/app_colors.dart';
 import 'package:star_shop/features/presentation/search/pages/product_search_page.dart';
@@ -19,30 +20,30 @@ class HomePageSearchBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
       ),
-      child: const Row(
+      child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.search_outlined,
             size: 26,
             color: AppColors.subtextColor,
           ),
-          SizedBox(
+          const SizedBox(
             width: 16,
           ),
-          // AnimatedTextKit(
-          //   repeatForever: true,
-          //   animatedTexts: [
-          //     TypewriterAnimatedText('Find your favorite items',
-          //         textStyle: TextStyle(
-          //           fontSize: 16,
-          //           color: AppColors.subtextColor,
-          //         ),
-          //         speed: Duration(milliseconds: 80)),
-          //   ],
-          //   onTap: () {
-          //     print('aaaa');
-          //   },
-          // ),
+          AnimatedTextKit(
+            repeatForever: true,
+            animatedTexts: [
+              TypewriterAnimatedText('Find your favorite items',
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                    color: AppColors.subtextColor,
+                  ),
+                  speed: const Duration(milliseconds: 80)),
+            ],
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const ProductSearchPage(isEdit: false)));
+            },
+          ),
         ],
       ),
     );

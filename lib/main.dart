@@ -8,6 +8,7 @@ import 'package:star_shop/features/presentation/address/bloc/address_display_cub
 import 'package:star_shop/common/bloc/favorite/favorite_product_cubit.dart';
 import 'package:star_shop/features/presentation/cart/bloc/cart_display_cubit.dart';
 import 'package:star_shop/features/presentation/notification/bloc/notification_display_cubit.dart';
+import 'package:star_shop/features/presentation/order/bloc/order_display_cubit.dart';
 import 'package:star_shop/features/presentation/splash/pages/splash_page.dart';
 import 'package:star_shop/firebase_options.dart';
 import 'package:star_shop/service_locator.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => UserInfoDisplayCubit()),
         BlocProvider(create: (context) => AddressDisplayCubit()),
         BlocProvider(create: (context) => NotificationDisplayCubit()),
+        BlocProvider(create: (context) => OrderDisplayCubit()),
       ],
       child: MaterialApp(
           theme: AppThemes.appTheme,
